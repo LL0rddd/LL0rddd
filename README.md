@@ -43,7 +43,7 @@ SQLite · pandas · Git · JSON · CSV
 
 ## Projetos selecionados
 
-> Os repositórios abaixo estão privados no momento. Os links serão disponibilizados individualmente após revisão do conteúdo para publicação.
+> Os repositórios abaixo estão privados no momento. Os links serão disponibilizados individualmente após solicitação.
 
 ### Clean Git Commit
 
