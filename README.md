@@ -67,33 +67,26 @@
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🛡️ Clean Git Commit</h3>
-      <p>Aplicação desktop para identificar, remover e restaurar artefatos antes de commits Git, com SHA-256, rollback, quarentena e proteção contra symlinks.</p>
-      <p><code>TypeScript</code> <code>React</code> <code>Electron</code> <code>Vitest</code> <code>Playwright</code></p>
-    </td>
-    <td width="50%" valign="top">
       <h3>🧩 Prompt Forge</h3>
       <p>Ferramenta local para estruturar prompts e orquestrar ferramentas assistidas por IA, com arquitetura MVC/Services e histórico em SQLite.</p>
       <p><code>Python</code> <code>Streamlit</code> <code>SQLite</code> <code>pytest</code></p>
     </td>
+    <td width="50%" valign="top">
+      <h3>⚙️ Requests Automations</h3>
+      <p>Automação para consultar e consolidar tickets Jira e Freshdesk, com aplicação Streamlit, cache, retries e workflows n8n para triagem operacional.</p>
+      <p><code>Python</code> <code>Streamlit</code> <code>n8n</code> <code>Jira/Freshdesk APIs</code></p>
+    </td>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <h3>🔎 File Insight</h3>
-      <p>Análise técnica local de arquivos, logs, código e dados estruturados, com amostragem econômica e proteção de informações sensíveis.</p>
-      <p><code>Python</code> <code>Streamlit</code> <code>pandas</code> <code>BeautifulSoup</code></p>
-    </td>
     <td width="50%" valign="top">
       <h3>🔗 Jira Issue Analyzer</h3>
       <p>Consulta e análise estruturada de issues do Jira Cloud, incluindo JQL, paginação, segurança HTTP e testes automatizados.</p>
       <p><code>Node.js</code> <code>Express</code> <code>Jira REST API</code> <code>Helmet</code></p>
     </td>
-  </tr>
-  <tr>
-    <td colspan="2" valign="top">
-      <h3>📄 Conversor Markdown</h3>
-      <p>Conversão de documentos, PDFs, imagens e arquivos de código para Markdown, incluindo OCR e detecção de conteúdo.</p>
-      <p><code>Python</code> <code>Streamlit</code> <code>PyMuPDF</code> <code>Tesseract</code> <code>pytest</code></p>
+    <td width="50%" valign="top">
+      <h3>🛡️ Clean Git Commit</h3>
+      <p>Aplicação desktop para identificar, remover e restaurar artefatos antes de commits Git, com SHA-256, rollback, quarentena e proteção contra symlinks.</p>
+      <p><code>TypeScript</code> <code>React</code> <code>Electron</code> <code>Vitest</code> <code>Playwright</code></p>
     </td>
   </tr>
 </table>
