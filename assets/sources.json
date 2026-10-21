@@ -1,0 +1,17 @@
+{
+  "brands": {
+    "python.png": "https://cdn.jsdelivr.net/gh/python/cpython@main/Lib/profiling/sampling/_assets/python-logo-only.png",
+    "node.svg": "https://cdn.jsdelivr.net/gh/nodejs/nodejs.org@main/apps/site/public/static/logos/nodejsHex.svg",
+    "typescript.svg": "https://cdn.jsdelivr.net/gh/microsoft/TypeScript-Website@04569788cf46f97e2f16356639bc9635c88c0a61/packages/typescriptlang-org/static/branding/ts-logo-128.svg",
+    "react.svg": "https://cdn.jsdelivr.net/gh/reactjs/react.dev@main/public/images/brand/logo_dark.svg",
+    "electron.svg": "https://cdn.jsdelivr.net/gh/electron/website@main/static/assets/img/logo.svg",
+    "streamlit.svg": "https://cdn.jsdelivr.net/gh/streamlit/streamlit@develop/frontend/lib/src/assets/img/streamlit-logo/streamlit-mark-color.svg",
+    "n8n.svg": "https://cdn.jsdelivr.net/gh/n8n-io/n8n@master/packages/frontend/@n8n/design-system/src/components/N8nLogo/logo-icon.svg",
+    "playwright.svg": "https://cdn.jsdelivr.net/gh/microsoft/playwright@main/packages/dashboard/public/playwright-logo.svg",
+    "claudecode.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/claudecode-color.png",
+    "codex.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/codex.png",
+    "antigravity.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/antigravity-color.png"
+  },
+  "lucide": "https://cdn.jsdelivr.net/npm/lucide-static@0.468.0",
+  "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21."
+}

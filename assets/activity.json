@@ -1,0 +1,44 @@
+{
+  "owner": "LL0rddd",
+  "scope": "public_only",
+  "as_of": "2026-10-21",
+  "months": [
+    {
+      "month": "2026-04",
+      "commits": 0,
+      "pull_requests": 0,
+      "repositories": 0
+    },
+    {
+      "month": "2026-05",
+      "commits": 0,
+      "pull_requests": 0,
+      "repositories": 0
+    },
+    {
+      "month": "2026-06",
+      "commits": 0,
+      "pull_requests": 0,
+      "repositories": 0
+    },
+    {
+      "month": "2026-07",
+      "commits": 0,
+      "pull_requests": 0,
+      "repositories": 0
+    },
+    {
+      "month": "2026-08",
+      "commits": 0,
+      "pull_requests": 0,
+      "repositories": 0
+    },
+    {
+      "month": "2026-09",
+      "commits": 6,
+      "pull_requests": 0,
+      "repositories": 1
+    }
+  ],
+  "method": "Commits indexed by GitHub search and author date; public PRs created; currently public owned non-fork repositories created by each month end. Not a reconstruction of past repository visibility. Independent zero-based chart scales. Private activity is excluded."
+}
