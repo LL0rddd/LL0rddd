@@ -66,11 +66,23 @@ def save(root, name):
 
 def version_readme_asset(relative):
     """Change only the target image URL when its content changes, avoiding stale caches."""
-    digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()[:12]
+    source = Path(relative)
+    content = (ROOT / source).read_bytes()
+    digest = hashlib.sha256(content).hexdigest()[:12]
+    versioned = Path("assets/versioned") / (source.stem + "-" + digest + source.suffix)
+    destination = ROOT / versioned
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        if destination.read_bytes() != content:
+            raise ValueError("Content hash collision; refusing to overwrite a previous asset")
+    else:
+        destination.write_bytes(content)
     readme = ROOT / "README.md"
     original = readme.read_text(encoding="utf-8")
-    pattern = re.compile(r'((?:src|srcset)="\./' + re.escape(relative) + r')(?:\?v=[^"]*)?(\")')
-    updated = pattern.sub(lambda match: match[1] + "?v=" + digest + match[2], original)
+    # github.com/.../raw redirects drop query parameters: the filename must change.
+    versions = re.escape("assets/versioned/" + source.stem + "-") + r'[0-9a-f]{12}' + re.escape(source.suffix)
+    pattern = re.compile(r'((?:src|srcset)="\./)(?:' + re.escape(relative) + '|' + versions + r')(?:\?v=[^"]*)?(\")')
+    updated = pattern.sub(lambda match: match[1] + versioned.as_posix() + match[2], original)
     if updated != original:
         readme.write_text(updated, encoding="utf-8")
 

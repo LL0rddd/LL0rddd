@@ -37,8 +37,9 @@ mensagens de commit, títulos de PRs, URLs ou outros detalhes dos repositórios 
 - Escalas independentes e a partir de zero; a ausência de atividade aparece como zero.
 - JSON de contagens: `assets/activity.json`; data da coleta visível no gráfico.
 - GIF com animação finita e SVG estático para preferência de movimento reduzido.
-- As imagens alteradas usam `?v=` com hash do conteúdo no README, atualizado pelos
-  geradores, para não manter versões antigas em cache após uma publicação.
+- As imagens alteradas usam nomes com hash do conteúdo em `assets/versioned/`,
+  atualizados pelos geradores. Os arquivos canônicos e versões anteriores são mantidos.
+  Parâmetros `?v=` não bastam: o redirecionamento de imagens raw do GitHub os descarta.
 - O rodapé identifica explicitamente o mês atual como parcial; a janela nunca depende
   de meses fixos escritos manualmente. O snapshot ainda depende da execução do coletor.
 - Respostas brutas da API ficam locais em `.metrics-raw/`, ignoradas pelo Git. Não há tokens nos arquivos.

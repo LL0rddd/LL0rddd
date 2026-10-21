@@ -64,7 +64,10 @@ class ProfileTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text()
         for relative in ("assets/activity.gif", "assets/activity.svg", "assets/badges/antigravity.svg"):
             digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()[:12]
-            self.assertIn('./' + relative + '?v=' + digest + '"', readme)
+            source = Path(relative)
+            versioned = Path("assets/versioned") / (source.stem + "-" + digest + source.suffix)
+            self.assertIn('./' + versioned.as_posix() + '"', readme)
+            self.assertEqual((ROOT / versioned).read_bytes(), (ROOT / relative).read_bytes())
 
     def test_image_versioning_preserves_other_content_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -79,6 +82,13 @@ class ProfileTests(unittest.TestCase):
             self.assertIn('<p>Preserve this text</p>', first)
             self.assertIn('src="./other.svg"', first)
             self.assertNotIn('?v=old', first)
+            self.assertEqual((root / "badge.svg").read_text(), "synthetic-image")
+            original_versions = list((root / "assets/versioned").iterdir())
+            (root / "badge.svg").write_text("updated-image")
+            with patch.object(profile_assets, "ROOT", root):
+                profile_assets.version_readme_asset("badge.svg")
+            self.assertEqual(len(list((root / "assets/versioned").iterdir())), 2)
+            self.assertEqual(original_versions[0].read_text(), "synthetic-image")
 
     def test_svg_assets_are_local_and_inert(self):
         for asset in (ROOT / "assets").rglob("*.svg"):
