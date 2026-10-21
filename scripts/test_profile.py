@@ -1,4 +1,5 @@
 import json
+import hashlib
 import re
 import tempfile
 import unittest
@@ -9,6 +10,7 @@ import xml.etree.ElementTree as ET
 
 from PIL import Image
 import refresh_activity as activity
+import build_profile_assets as profile_assets
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -56,7 +58,27 @@ class ProfileTests(unittest.TestCase):
     def test_all_readme_assets_exist(self):
         readme = (ROOT / "README.md").read_text()
         for relative in re.findall(r'(?:src|srcset)="\./([^" ]+)"', readme):
-            self.assertTrue((ROOT / relative).is_file(), relative)
+            self.assertTrue((ROOT / relative.split("?", 1)[0]).is_file(), relative)
+
+    def test_changed_images_have_content_versions_in_readme(self):
+        readme = (ROOT / "README.md").read_text()
+        for relative in ("assets/activity.gif", "assets/activity.svg", "assets/badges/antigravity.svg"):
+            digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()[:12]
+            self.assertIn('./' + relative + '?v=' + digest + '"', readme)
+
+    def test_image_versioning_preserves_other_content_and_is_idempotent(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "badge.svg").write_text("synthetic-image")
+            (root / "README.md").write_text('<p>Preserve this text</p><img src="./badge.svg?v=old"><img src="./other.svg">')
+            with patch.object(profile_assets, "ROOT", root):
+                profile_assets.version_readme_asset("badge.svg")
+                first = (root / "README.md").read_text()
+                profile_assets.version_readme_asset("badge.svg")
+            self.assertEqual(first, (root / "README.md").read_text())
+            self.assertIn('<p>Preserve this text</p>', first)
+            self.assertIn('src="./other.svg"', first)
+            self.assertNotIn('?v=old', first)
 
     def test_svg_assets_are_local_and_inert(self):
         for asset in (ROOT / "assets").rglob("*.svg"):

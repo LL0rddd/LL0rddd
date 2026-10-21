@@ -4,6 +4,7 @@ Network is used only with --download. No credentials are needed for brand assets
 """
 import argparse
 import base64
+import hashlib
 import json
 import re
 import urllib.request
@@ -61,6 +62,17 @@ def save(root, name):
     destination = ASSETS / "badges" / name
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(ET.tostring(root, encoding="unicode") + "\n", encoding="utf-8")
+
+
+def version_readme_asset(relative):
+    """Change only the target image URL when its content changes, avoiding stale caches."""
+    digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()[:12]
+    readme = ROOT / "README.md"
+    original = readme.read_text(encoding="utf-8")
+    pattern = re.compile(r'((?:src|srcset)="\./' + re.escape(relative) + r')(?:\?v=[^"]*)?(\")')
+    updated = pattern.sub(lambda match: match[1] + "?v=" + digest + match[2], original)
+    if updated != original:
+        readme.write_text(updated, encoding="utf-8")
 
 
 def icon(root, name, x, y, size, color):
@@ -180,6 +192,7 @@ def build():
         ("codex", "Codex", "codex.png", "#ffffff", "#000000"),
         ("antigravity", "Antigravity/Gemini", "antigravity.png", "#17202d", "#f1f5f9")):
         technology(*args)
+    version_readme_asset("assets/badges/antigravity.svg")
 
 
 if __name__ == "__main__":

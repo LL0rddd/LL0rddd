@@ -22,8 +22,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/activity.svg">
-    <img src="./assets/activity.gif" width="580" alt="Atividade agregada em código nos repositórios pessoais públicos e privados: commits indexados, PRs criados e repositórios próprios sem forks. Sem nomes ou conteúdo privado. Últimos seis meses incluindo o atual, parcial até a coleta; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
+    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/activity.svg?v=228214ad1ead">
+    <img src="./assets/activity.gif?v=2d513d5a1517" width="580" alt="Atividade agregada em código nos repositórios pessoais públicos e privados: commits indexados, PRs criados e repositórios próprios sem forks. Sem nomes ou conteúdo privado. Últimos seis meses incluindo o atual, parcial até a coleta; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
   </picture>
 </p>
 
@@ -72,7 +72,7 @@ Inteligência artificial
 <p>
   <img src="./assets/badges/claude-code.svg" height="28" alt="Claude Code">
   <img src="./assets/badges/codex.svg" height="28" alt="Codex">
-  <img src="./assets/badges/antigravity.svg" height="28" alt="Antigravity/Gemini">
+  <img src="./assets/badges/antigravity.svg?v=913a9b84400b" height="28" alt="Antigravity/Gemini">
 </p>
 
 ## Projetos selecionados

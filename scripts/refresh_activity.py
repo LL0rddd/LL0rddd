@@ -12,7 +12,7 @@ from xml.sax.saxutils import escape
 from zoneinfo import ZoneInfo
 
 from PIL import Image, ImageDraw
-from build_profile_assets import font
+from build_profile_assets import font, version_readme_asset
 
 ROOT = Path(__file__).resolve().parents[1]
 MONTHS = ("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")
@@ -169,6 +169,8 @@ def render(data):
         frames.append(image)
     frames[0].save(ROOT / "assets/activity.gif", save_all=True, append_images=frames[1:],
                    duration=[60]*14+[10000], disposal=2, optimize=False)
+    version_readme_asset("assets/activity.gif")
+    version_readme_asset("assets/activity.svg")
 
 
 if __name__ == "__main__":
