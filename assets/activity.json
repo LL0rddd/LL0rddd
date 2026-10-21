@@ -1,14 +1,8 @@
 {
   "owner": "LL0rddd",
-  "scope": "public_only",
+  "scope": "personal_public_and_private",
   "as_of": "2026-10-21",
   "months": [
-    {
-      "month": "2026-04",
-      "commits": 0,
-      "pull_requests": 0,
-      "repositories": 0
-    },
     {
       "month": "2026-05",
       "commits": 0,
@@ -35,10 +29,16 @@
     },
     {
       "month": "2026-09",
-      "commits": 6,
-      "pull_requests": 0,
-      "repositories": 1
+      "commits": 234,
+      "pull_requests": 2,
+      "repositories": 30
+    },
+    {
+      "month": "2026-10",
+      "commits": 1111,
+      "pull_requests": 8,
+      "repositories": 33
     }
   ],
-  "method": "Commits indexed by GitHub search and author date; public PRs created; currently public owned non-fork repositories created by each month end. Not a reconstruction of past repository visibility. Independent zero-based chart scales. Private activity is excluded."
+  "method": "Latest six calendar months including the current partial month through as_of (reference date in America/Sao_Paulo; GitHub date queries use UTC). Aggregate counts from LL0rddd-owned public and private repositories accessible to the credential. Commits indexed by GitHub search and author date; PRs created by LL0rddd; currently owned non-fork repositories created by each period end. Other owners and organizations are excluded. Not a reconstruction of past visibility, deletions or transfers. Independent zero-based scales. No private names, code, messages or URLs are exported."
 }

@@ -1,4 +1,4 @@
-"""Generate a six-completed-month snapshot using public GitHub activity only."""
+"""Generate aggregate public/private activity for LL0rddd-owned repositories."""
 import argparse
 import calendar
 import hashlib
@@ -9,6 +9,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
+from zoneinfo import ZoneInfo
 
 from PIL import Image, ImageDraw
 from build_profile_assets import font
@@ -19,7 +20,7 @@ RAW_RUN = ROOT / ".metrics-raw" / datetime.now(timezone.utc).strftime("%Y%m%dT%H
 
 
 def api(endpoint):
-    headers = {"Accept": "application/vnd.github+json", "User-Agent": "LL0rddd-profile-public-metrics",
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "LL0rddd-profile-aggregate-metrics",
                "X-GitHub-Api-Version": "2022-11-28"}
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if token:
@@ -39,62 +40,87 @@ def api(endpoint):
 def periods(today):
     current = today.year * 12 + today.month - 1
     result = []
-    for offset in range(6, 0, -1):
+    for offset in range(5, -1, -1):
         year, month = divmod(current - offset, 12)
         month += 1
-        result.append((date(year, month, 1), date(year, month, calendar.monthrange(year, month)[1])))
+        end = date(year, month, calendar.monthrange(year, month)[1])
+        result.append((date(year, month, 1), min(end, today)))
     return result
 
 
 def search_count(kind, query):
     payload = api("search/" + kind + "?per_page=1&q=" + urllib.parse.quote(query))
     if payload.get("incomplete_results") or not isinstance(payload.get("total_count"), int):
-        raise RuntimeError("Incomplete public GitHub search; previous assets were not replaced")
+        raise RuntimeError("Incomplete GitHub search; previous assets were not replaced")
     return payload["total_count"]
 
 
 def collect(today):
-    # /users/:login/repos lists public repositories, even with an authenticated request.
+    if not (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")):
+        raise RuntimeError("Authentication is required; refusing a public-only fallback")
+    user = api("user")
+    if user.get("login", "").lower() != "ll0rddd":
+        raise RuntimeError("The credential must belong to LL0rddd")
+    # Use the authenticated endpoint: /users/:login/repos excludes private repositories.
+    # Retain raw responses locally, but never export repository names or identifiers.
     repos = []
     for page in range(1, 101):
-        batch = api(f"users/LL0rddd/repos?type=owner&per_page=100&page={page}")
-        repos.extend(r for r in batch if not r["private"] and not r["fork"]
-                     and r["owner"]["login"].lower() == "ll0rddd")
+        batch = api(f"user/repos?visibility=all&affiliation=owner&per_page=100&page={page}")
+        repos.extend(r for r in batch if r["owner"]["login"].lower() == "ll0rddd")
         if len(batch) < 100:
             break
     else:
         raise RuntimeError("Repository pagination exceeded the safety limit")
+    private_count = sum(r["private"] for r in repos)
+    if not private_count:
+        raise RuntimeError("No private repositories visible; verify credential access instead of publishing partial counts")
+    expected_private = user.get("owned_private_repos")
+    if isinstance(expected_private, int) and private_count != expected_private:
+        raise RuntimeError("Incomplete private repository access; refusing partial counts")
+    own_nonfork = [r for r in repos if not r["fork"]]
     months = []
     for start, end in periods(today):
         window = f"{start.isoformat()}..{end.isoformat()}"
         months.append({"month": start.strftime("%Y-%m"),
-                       "commits": search_count("commits", f"author:LL0rddd is:public author-date:{window}"),
-                       "pull_requests": search_count("issues", f"author:LL0rddd is:public is:pr created:{window}"),
-                       "repositories": sum(r["created_at"][:10] <= end.isoformat() for r in repos)})
-    return {"owner": "LL0rddd", "scope": "public_only", "as_of": today.isoformat(), "months": months,
-            "method": "Commits indexed by GitHub search and author date; public PRs created; currently public owned non-fork repositories created by each month end. Not a reconstruction of past repository visibility. Independent zero-based chart scales. Private activity is excluded."}
+                       "commits": search_count("commits", f"author:LL0rddd user:LL0rddd author-date:{window}"),
+                       "pull_requests": search_count("issues", f"author:LL0rddd user:LL0rddd is:pr created:{window}"),
+                       "repositories": sum(r["created_at"][:10] <= end.isoformat() for r in own_nonfork)})
+    return {"owner": "LL0rddd", "scope": "personal_public_and_private", "as_of": today.isoformat(), "months": months,
+            "method": "Latest six calendar months including the current partial month through as_of (reference date in America/Sao_Paulo; GitHub date queries use UTC). Aggregate counts from LL0rddd-owned public and private repositories accessible to the credential. Commits indexed by GitHub search and author date; PRs created by LL0rddd; currently owned non-fork repositories created by each period end. Other owners and organizations are excluded. Not a reconstruction of past visibility, deletions or transfers. Independent zero-based scales. No private names, code, messages or URLs are exported."}
+
+
+def validate_snapshot(data):
+    if set(data) != {"owner", "scope", "as_of", "months", "method"}:
+        raise ValueError("Unexpected metadata: only aggregate snapshot fields are allowed")
+    if data.get("owner") != "LL0rddd" or data.get("scope") != "personal_public_and_private" or len(data["months"]) != 6:
+        raise ValueError("Expected six months of personal public/private aggregate metrics")
+    for row in data["months"]:
+        if set(row) != {"month", "commits", "pull_requests", "repositories"}:
+            raise ValueError("Repository-level details are not allowed in the published snapshot")
+        if any(type(row[k]) is not int or row[k] < 0 for k in ("commits", "pull_requests", "repositories")):
+            raise ValueError("Metrics must be non-negative integers")
+    expected = [start.strftime("%Y-%m") for start, _ in periods(date.fromisoformat(data["as_of"]))]
+    if [row["month"] for row in data["months"]] != expected:
+        raise ValueError("Snapshot must contain the latest six months including the current month")
 
 
 def render(data):
+    validate_snapshot(data)
     months = data["months"]
-    if data.get("scope") != "public_only" or len(months) != 6:
-        raise ValueError("Expected six months of public metrics")
-    for row in months:
-        if any(type(row[k]) is not int or row[k] < 0 for k in ("commits", "pull_requests", "repositories")):
-            raise ValueError("Metrics must be non-negative integers")
     labels = [MONTHS[int(row["month"][5:]) - 1] for row in months]
     series = [("Commits", "commits", "#22d3ee", "indexados em 6 meses"),
               ("Pull requests", "pull_requests", "#a78bfa", "criados em 6 meses"),
-              ("Repositórios", "repositories", "#14b8a6", "públicos próprios · sem forks")]
+              ("Repositórios", "repositories", "#14b8a6", "próprios · sem forks")]
     period = f"{labels[0]}–{labels[-1]} {months[-1]['month'][:4]}"
+    footer = "Mês atual parcial até " + date.fromisoformat(data["as_of"]).strftime("%d/%m/%Y") + " · escalas independentes"
     svg = ['<svg xmlns="http://www.w3.org/2000/svg" width="580" height="205" viewBox="0 0 580 205" role="img">',
-           "<title>Atividade pública de Lucas Aguiar</title>",
+           "<title>Atividade agregada de Lucas Aguiar: públicos e privados</title>",
            f"<desc>{escape(data['method'])}</desc>",
            '<rect x=".5" y=".5" width="579" height="204" rx="10" fill="#0b1830" stroke="#233653"/>']
     def text(x, y, content, size=11, color="#b4c3d5"):
         svg.append(f'<text x="{x}" y="{y}" fill="{color}" font-size="{size}" font-family="Segoe UI,Helvetica,Arial,sans-serif">{escape(str(content))}</text>')
     text(16, 24, "Atividade em código", 12, "#f1f5f9")
-    text(390, 24, period + " · público")
+    text(360, 24, period + " · públicos + privados")
     bars = []
     for i, (label, key, color, unit) in enumerate(series):
         x = 16 + i * 190
@@ -111,7 +137,7 @@ def render(data):
             bars.append((bx, bh, color))
         text(x, 161, unit)
     svg.append('<path d="M16 174 H564" stroke="#233653"/>')
-    text(16, 193, "Somente dados públicos · escalas independentes · " + data["as_of"])
+    text(16, 193, footer)
     svg.append("</svg>")
     (ROOT / "assets/activity.svg").write_text("\n".join(svg) + "\n", encoding="utf-8")
     # A non-looping animation; the static SVG remains available for reduced motion.
@@ -123,7 +149,7 @@ def render(data):
         def t(x, y, value, size=11, color="#b4c3d5"):
             draw.text((x * 2, (y - size) * 2), str(value), font=font(size * 2), fill=color)
         t(16, 24, "Atividade em código", 12, "#f1f5f9")
-        t(390, 24, period + " · público")
+        t(360, 24, period + " · públicos + privados")
         progress = 1 - (1 - frame_index / 14) ** 3
         for i, (label, key, color, unit) in enumerate(series):
             x = 16 + i * 190
@@ -139,7 +165,7 @@ def render(data):
                 t(bx-2, 143, labels[j])
             t(x, 161, unit)
         draw.line((32, 348, 1128, 348), fill="#233653", width=2)
-        t(16, 193, "Somente dados públicos · escalas independentes · " + data["as_of"])
+        t(16, 193, footer)
         frames.append(image)
     frames[0].save(ROOT / "assets/activity.gif", save_all=True, append_images=frames[1:],
                    duration=[60]*14+[10000], disposal=2, optimize=False)
@@ -150,8 +176,8 @@ if __name__ == "__main__":
     parser.add_argument("--from-snapshot", action="store_true", help="Render without querying GitHub")
     args = parser.parse_args()
     snapshot = ROOT / "assets/activity.json"
-    data = json.loads(snapshot.read_text()) if args.from_snapshot else collect(datetime.now(timezone.utc).date())
+    data = json.loads(snapshot.read_text()) if args.from_snapshot else collect(datetime.now(ZoneInfo("America/Sao_Paulo")).date())
     render(data)
     if not args.from_snapshot:
         snapshot.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    print("Public activity generated:", data["as_of"], "(private activity excluded)")
+    print("Aggregate activity generated:", data["as_of"], "(public + private; no repository details)")

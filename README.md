@@ -23,7 +23,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-reduced-motion: reduce)" srcset="./assets/activity.svg">
-    <img src="./assets/activity.gif" width="580" alt="Atividade pública em código: commits indexados, PRs criados e repositórios próprios sem forks. Seis meses completos; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
+    <img src="./assets/activity.gif" width="580" alt="Atividade agregada em código nos repositórios pessoais públicos e privados: commits indexados, PRs criados e repositórios próprios sem forks. Sem nomes ou conteúdo privado. Últimos seis meses incluindo o atual, parcial até a coleta; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
   </picture>
 </p>
 
@@ -109,11 +109,11 @@ Inteligência artificial
 ## Como eu trabalho
 
 <table>
-  <tr><td width="30"><img src="./assets/badges/traceability.svg" width="30" height="30" alt=""></td><td><strong>Automação com rastreabilidade:</strong> comportamento observável e reproduzível.</td></tr>
-  <tr><td width="30"><img src="./assets/badges/security.svg" width="30" height="30" alt=""></td><td><strong>Segurança por padrão:</strong> falhas, limites de API e dados sensíveis tratados explicitamente.</td></tr>
-  <tr><td width="30"><img src="./assets/badges/architecture.svg" width="30" height="30" alt=""></td><td><strong>Arquitetura pragmática:</strong> separação entre integrações, regras de negócio e interfaces.</td></tr>
-  <tr><td width="30"><img src="./assets/badges/verification.svg" width="30" height="30" alt=""></td><td><strong>Qualidade verificável:</strong> fluxos positivos, negativos e casos de borda.</td></tr>
-  <tr><td width="30"><img src="./assets/badges/supervision.svg" width="30" height="30" alt=""></td><td><strong>IA com supervisão:</strong> decisões críticas continuam testáveis e auditáveis.</td></tr>
+  <tr><td width="64" valign="middle"><img src="./assets/badges/traceability.svg" width="30" height="30" alt=""></td><td><strong>Automação com rastreabilidade:</strong> comportamento observável e reproduzível.</td></tr>
+  <tr><td width="64" valign="middle"><img src="./assets/badges/security.svg" width="30" height="30" alt=""></td><td><strong>Segurança por padrão:</strong> falhas, limites de API e dados sensíveis tratados explicitamente.</td></tr>
+  <tr><td width="64" valign="middle"><img src="./assets/badges/architecture.svg" width="30" height="30" alt=""></td><td><strong>Arquitetura pragmática:</strong> separação entre integrações, regras de negócio e interfaces.</td></tr>
+  <tr><td width="64" valign="middle"><img src="./assets/badges/verification.svg" width="30" height="30" alt=""></td><td><strong>Qualidade verificável:</strong> fluxos positivos, negativos e casos de borda.</td></tr>
+  <tr><td width="64" valign="middle"><img src="./assets/badges/supervision.svg" width="30" height="30" alt=""></td><td><strong>IA com supervisão:</strong> decisões críticas continuam testáveis e auditáveis.</td></tr>
 </table>
 
 <p align="center">

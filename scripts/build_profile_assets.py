@@ -90,6 +90,9 @@ def badge(name, label, icon_name, tone, header=False):
 def technology(name, label, filename, background, foreground="#ffffff"):
     left, height = 25, 28
     width = left + int(font(11).getlength(label)) + 12
+    if name == "antigravity":
+        # Approved HTML preview: 134.789 CSS px including the original 8 px right padding.
+        width = 135
     root = svg(width, height, label)
     add(root, "rect", width=width, height=height, fill=background)
     add(root, "rect", x=3, y=3, width=22, height=22,
@@ -103,11 +106,14 @@ def technology(name, label, filename, background, foreground="#ffffff"):
         add(root, "image", x=6, y=6, width=16, height=16,
             href="data:image/png;base64," + base64.b64encode(source.read_bytes()).decode())
     text = add(root, "text", x=left + 6, y=18, fill=foreground, font_size=11,
-               font_family="Segoe UI,Helvetica,Arial,sans-serif")
+               font_family="Segoe UI,system-ui,sans-serif" if name == "antigravity" else "Segoe UI,Helvetica,Arial,sans-serif")
     text.text = label
     if name == "antigravity":
-        for i, color in enumerate(("#00b95c", "#3186ff", "#ffe432", "#fc413d")):
-            add(root, "rect", x=i * width / 4, y=26, width=width / 4, height=2, fill=color)
+        definitions = add(root, "defs")
+        gradient = add(definitions, "linearGradient", id="antigravity-colors", x1="0%", y1="0%", x2="100%", y2="0%")
+        for offset, color in (("0%", "#00b95c"), ("40%", "#3186ff"), ("72%", "#ffe432"), ("100%", "#fc413d")):
+            add(gradient, "stop", offset=offset, stop_color=color)
+        add(root, "rect", x=0, y=26, width=width, height=2, fill="url(#antigravity-colors)")
     save(root, name + ".svg")
 
 

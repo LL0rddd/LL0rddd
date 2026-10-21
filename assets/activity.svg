@@ -1,57 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="580" height="205" viewBox="0 0 580 205" role="img">
-<title>Atividade pública de Lucas Aguiar</title>
-<desc>Commits indexed by GitHub search and author date; public PRs created; currently public owned non-fork repositories created by each month end. Not a reconstruction of past repository visibility. Independent zero-based chart scales. Private activity is excluded.</desc>
+<title>Atividade agregada de Lucas Aguiar: públicos e privados</title>
+<desc>Latest six calendar months including the current partial month through as_of (reference date in America/Sao_Paulo; GitHub date queries use UTC). Aggregate counts from LL0rddd-owned public and private repositories accessible to the credential. Commits indexed by GitHub search and author date; PRs created by LL0rddd; currently owned non-fork repositories created by each period end. Other owners and organizations are excluded. Not a reconstruction of past visibility, deletions or transfers. Independent zero-based scales. No private names, code, messages or URLs are exported.</desc>
 <rect x=".5" y=".5" width="579" height="204" rx="10" fill="#0b1830" stroke="#233653"/>
 <text x="16" y="24" fill="#f1f5f9" font-size="12" font-family="Segoe UI,Helvetica,Arial,sans-serif">Atividade em código</text>
-<text x="390" y="24" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">abr–set 2026 · público</text>
+<text x="360" y="24" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai–out 2026 · públicos + privados</text>
 <text x="16" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Commits</text>
-<text x="16" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">6</text>
+<text x="16" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">1.345</text>
 <path d="M16 127 H184" fill="none" stroke="#233653"/>
-<rect x="22" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>abr: 0</title></rect>
-<text x="20" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">abr</text>
-<rect x="49" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>mai: 0</title></rect>
-<text x="47" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
-<rect x="76" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>jun: 0</title></rect>
-<text x="74" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
-<rect x="103" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>jul: 0</title></rect>
-<text x="101" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
-<rect x="130" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>ago: 0</title></rect>
-<text x="128" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
-<rect x="157" y="95.75" width="14" height="31.25" rx="2" fill="#22d3ee"><title>set: 6</title></rect>
-<text x="155" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
+<rect x="22" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>mai: 0</title></rect>
+<text x="20" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
+<rect x="49" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>jun: 0</title></rect>
+<text x="47" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
+<rect x="76" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>jul: 0</title></rect>
+<text x="74" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
+<rect x="103" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>ago: 0</title></rect>
+<text x="101" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
+<rect x="130" y="120.42" width="14" height="6.58" rx="2" fill="#22d3ee"><title>set: 234</title></rect>
+<text x="128" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
+<rect x="157" y="95.75" width="14" height="31.25" rx="2" fill="#22d3ee"><title>out: 1111</title></rect>
+<text x="155" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">out</text>
 <text x="16" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">indexados em 6 meses</text>
 <text x="206" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Pull requests</text>
-<text x="206" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">0</text>
+<text x="206" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">10</text>
 <path d="M206 127 H374" fill="none" stroke="#233653"/>
-<rect x="212" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>abr: 0</title></rect>
-<text x="210" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">abr</text>
-<rect x="239" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>mai: 0</title></rect>
-<text x="237" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
-<rect x="266" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>jun: 0</title></rect>
-<text x="264" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
-<rect x="293" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>jul: 0</title></rect>
-<text x="291" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
-<rect x="320" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>ago: 0</title></rect>
-<text x="318" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
-<rect x="347" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>set: 0</title></rect>
-<text x="345" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
+<rect x="212" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>mai: 0</title></rect>
+<text x="210" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
+<rect x="239" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>jun: 0</title></rect>
+<text x="237" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
+<rect x="266" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>jul: 0</title></rect>
+<text x="264" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
+<rect x="293" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>ago: 0</title></rect>
+<text x="291" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
+<rect x="320" y="119.19" width="14" height="7.81" rx="2" fill="#a78bfa"><title>set: 2</title></rect>
+<text x="318" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
+<rect x="347" y="95.75" width="14" height="31.25" rx="2" fill="#a78bfa"><title>out: 8</title></rect>
+<text x="345" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">out</text>
 <text x="206" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">criados em 6 meses</text>
 <text x="396" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Repositórios</text>
-<text x="396" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">1</text>
+<text x="396" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">33</text>
 <path d="M396 127 H564" fill="none" stroke="#233653"/>
-<rect x="402" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>abr: 0</title></rect>
-<text x="400" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">abr</text>
-<rect x="429" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>mai: 0</title></rect>
-<text x="427" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
-<rect x="456" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>jun: 0</title></rect>
-<text x="454" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
-<rect x="483" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>jul: 0</title></rect>
-<text x="481" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
-<rect x="510" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>ago: 0</title></rect>
-<text x="508" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
-<rect x="537" y="95.75" width="14" height="31.25" rx="2" fill="#14b8a6"><title>set: 1</title></rect>
-<text x="535" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
-<text x="396" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">públicos próprios · sem forks</text>
+<rect x="402" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>mai: 0</title></rect>
+<text x="400" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">mai</text>
+<rect x="429" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>jun: 0</title></rect>
+<text x="427" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
+<rect x="456" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>jul: 0</title></rect>
+<text x="454" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
+<rect x="483" y="127.00" width="14" height="0.00" rx="2" fill="#14b8a6"><title>ago: 0</title></rect>
+<text x="481" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
+<rect x="510" y="98.59" width="14" height="28.41" rx="2" fill="#14b8a6"><title>set: 30</title></rect>
+<text x="508" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
+<rect x="537" y="95.75" width="14" height="31.25" rx="2" fill="#14b8a6"><title>out: 33</title></rect>
+<text x="535" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">out</text>
+<text x="396" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">próprios · sem forks</text>
 <path d="M16 174 H564" stroke="#233653"/>
-<text x="16" y="193" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Somente dados públicos · escalas independentes · 2026-10-21</text>
+<text x="16" y="193" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Mês atual parcial até 21/10/2026 · escalas independentes</text>
 </svg>

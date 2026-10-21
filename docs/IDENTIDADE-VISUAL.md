@@ -18,18 +18,32 @@ O espaçamento e as bordas podem, portanto, diferir ligeiramente da prévia.
 
 ## Atividade em código
 
-O gráfico é um snapshot real dos **seis meses completos anteriores à coleta**, em UTC.
-Não publica os números fictícios usados na prévia, nem nomes ou atividade de repositórios privados.
+O gráfico é um snapshot real dos **últimos seis meses de calendário, sempre incluindo
+o mês atual**, parcial até a data da coleta. Em 21/10/2026, a janela é maio–outubro;
+em novembro passa automaticamente a junho–novembro a cada nova coleta. A data de referência
+é a de America/Sao_Paulo; as consultas de data do GitHub usam UTC.
+Inclui **contagens agregadas dos repositórios pessoais públicos e privados de LL0rddd**
+acessíveis à credencial, conforme solicitação do usuário. Não publica nomes, código,
+mensagens de commit, títulos de PRs, URLs ou outros detalhes dos repositórios privados.
 
-- Commits: resultados públicos indexados pela busca do GitHub, por autor e data de autoria.
+- Commits: resultados indexados pela busca do GitHub, por autor e data de autoria,
+  restritos ao proprietário LL0rddd, sem filtro de visibilidade.
   Não equivalem ao número total de contribuições da conta ou a todos os commits locais.
-- PRs: pull requests públicos criados pelo usuário no período.
-- Repositórios: repositórios atualmente públicos, próprios e sem forks, criados até o
-  final de cada mês. Não reconstrói mudanças históricas de visibilidade, exclusões ou transferências.
+- PRs: pull requests criados pelo usuário nos seus repositórios pessoais no período,
+  públicos e privados. Organizações e repositórios de outros proprietários ficam de fora.
+- Repositórios: repositórios próprios públicos e privados, sem forks, criados até o
+  final de cada período; no mês atual, até a coleta. Não reconstrói mudanças históricas
+  de visibilidade, exclusões ou transferências.
 - Escalas independentes e a partir de zero; a ausência de atividade aparece como zero.
 - JSON de contagens: `assets/activity.json`; data da coleta visível no gráfico.
 - GIF com animação finita e SVG estático para preferência de movimento reduzido.
+- O rodapé identifica explicitamente o mês atual como parcial; a janela nunca depende
+  de meses fixos escritos manualmente. O snapshot ainda depende da execução do coletor.
 - Respostas brutas da API ficam locais em `.metrics-raw/`, ignoradas pelo Git. Não há tokens nos arquivos.
+- A coleta exige autenticação como LL0rddd e acesso aos repositórios privados. Falha
+  sem autenticação, sem privados visíveis ou com busca incompleta; não recua silenciosamente
+  para números exclusivamente públicos. Quando a API informa a contagem privada esperada,
+  ela é comparada à paginação. Uma credencial restrita ainda limita a cobertura disponível.
 
 Não há atualização agendada ou segredo novo. Para atualizar manualmente, usando uma
 credencial já disponível em `GH_TOKEN` ou `GITHUB_TOKEN` (nunca escreva seu valor no comando):
