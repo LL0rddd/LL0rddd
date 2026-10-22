@@ -1,4 +1,4 @@
-"""Generate aggregate public/private activity for LL0rddd-owned repositories."""
+"""Generate aggregate public/private activity authored by LL0rddd across GitHub."""
 import argparse
 import calendar
 import hashlib
@@ -82,11 +82,11 @@ def collect(today):
     for start, end in periods(today):
         window = f"{start.isoformat()}..{end.isoformat()}"
         months.append({"month": start.strftime("%Y-%m"),
-                       "commits": search_count("commits", f"author:LL0rddd user:LL0rddd author-date:{window}"),
-                       "pull_requests": search_count("issues", f"author:LL0rddd user:LL0rddd is:pr created:{window}"),
+                       "commits": search_count("commits", f"author:LL0rddd author-date:{window}"),
+                       "pull_requests": search_count("issues", f"author:LL0rddd is:pr created:{window}"),
                        "repositories": sum(r["created_at"][:10] <= end.isoformat() for r in own_nonfork)})
     return {"owner": "LL0rddd", "scope": "personal_public_and_private", "as_of": today.isoformat(), "months": months,
-            "method": "Latest six calendar months including the current partial month through as_of (reference date in America/Sao_Paulo; GitHub date queries use UTC). Aggregate counts from LL0rddd-owned public and private repositories accessible to the credential. Commits indexed by GitHub search and author date; PRs created by LL0rddd; currently owned non-fork repositories created by each period end. Other owners and organizations are excluded. Not a reconstruction of past visibility, deletions or transfers. Independent zero-based scales. No private names, code, messages or URLs are exported."}
+            "method": "Latest six calendar months including the current partial month through as_of (reference date in America/Sao_Paulo; GitHub date queries use UTC). Commits and PRs authored by LL0rddd across accessible public and private repositories, including other owners and organizations. Commits indexed by GitHub search on default branches and author date, not all local or unmerged commits; PRs created in the period, in any state. Repository counter remains currently owned non-fork repositories created by each period end, excluding collaborators' repositories. Coverage depends on credential access and GitHub indexing. Not a reconstruction of past visibility, deletions or transfers. Independent zero-based scales. No private names, code, messages or URLs are exported."}
 
 
 def validate_snapshot(data):

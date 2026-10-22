@@ -121,7 +121,7 @@ class ProfileTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "LL0rddd"):
                 activity.collect(date(2026, 10, 21))
 
-    def test_private_included_foreign_owner_excluded_and_details_not_exported(self):
+    def test_authored_activity_includes_collaborations_but_repo_counter_is_owned_only(self):
         def repo(owner, private, fork=False):
             return {"owner": {"login": owner}, "private": private, "fork": fork,
                     "created_at": "2026-04-01T00:00:00Z", "name": "INTERNAL_CANARY",
@@ -137,9 +137,49 @@ class ProfileTests(unittest.TestCase):
         self.assertNotIn("INTERNAL_", json.dumps(data))
         self.assertNotIn("example.invalid", json.dumps(data))
         for call in searches.call_args_list:
-            self.assertIn("user:LL0rddd", call.args[1])
+            self.assertIn("author:LL0rddd", call.args[1])
+            self.assertNotIn("user:", call.args[1])
+            self.assertNotIn("org:", call.args[1])
+            self.assertNotIn("repo:", call.args[1])
             self.assertNotIn("is:public", call.args[1])
+        self.assertEqual(len(searches.call_args_list), 12)
+        for index in range(0, 12, 2):
+            self.assertEqual(searches.call_args_list[index].args[0], "commits")
+            self.assertIn("author-date:", searches.call_args_list[index].args[1])
+            pr_query = searches.call_args_list[index + 1].args[1]
+            self.assertIn("is:pr created:", pr_query)
+            self.assertNotIn("is:merged", pr_query)
+            self.assertNotIn("is:open", pr_query)
         activity.validate_snapshot(data)
+
+    def test_search_url_preserves_global_author_and_returns_aggregate_only(self):
+        query = "author:LL0rddd is:pr created:2026-10-01..2026-10-22"
+        with patch.object(activity, "api", return_value={
+            "incomplete_results": False, "total_count": 17,
+            "items": [{"title": "PRIVATE_CANARY", "html_url": "https://example.invalid/private"}],
+        }) as api_mock:
+            count = activity.search_count("issues", query)
+        endpoint = api_mock.call_args.args[0]
+        parsed = activity.urllib.parse.parse_qs(activity.urllib.parse.urlsplit(endpoint).query)
+        self.assertEqual(parsed["q"], [query])
+        self.assertEqual(count, 17)
+        self.assertIs(type(count), int)
+
+    def test_workflow_updates_hourly_without_exposing_credentials_or_raw_data(self):
+        workflow = (ROOT / ".github/workflows/refresh-activity.yml").read_text()
+        self.assertIn("cron: '17 * * * *'", workflow)
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("secrets.PROFILE_METRICS_TOKEN", workflow)
+        self.assertIn("python scripts/refresh_activity.py", workflow)
+        self.assertEqual(workflow.count("python -m unittest discover"), 2)
+        self.assertNotIn("pull_request", workflow)
+        self.assertNotIn("upload-artifact", workflow)
+        self.assertNotIn(".metrics-raw", workflow)
+        self.assertNotIn("--force", workflow)
+        self.assertNotIn("git add .", workflow)
+        self.assertIn("git push origin HEAD:refs/heads/main", workflow)
+        self.assertIn("41898282+github-actions[bot]", workflow)
+        self.assertEqual(len(re.findall(r"uses: actions/[a-z-]+@[0-9a-f]{40}", workflow)), 2)
 
     def test_partial_private_access_is_rejected_when_expected_count_known(self):
         private = {"owner": {"login": "LL0rddd"}, "private": True, "fork": False}
