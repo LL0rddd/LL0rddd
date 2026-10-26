@@ -1,9 +1,12 @@
 import json
 import hashlib
+import io
 import re
+import ssl
 import tempfile
 import unittest
 from datetime import date
+from email.message import Message
 from pathlib import Path
 from unittest.mock import patch
 import xml.etree.ElementTree as ET
@@ -36,13 +39,15 @@ class ProfileTests(unittest.TestCase):
         self.assertIn((date(2024, 2, 1), date(2024, 2, 29)), activity.periods(date(2024, 3, 1)))
 
     def test_incomplete_search_is_not_a_count(self):
-        with patch.object(activity, "api", return_value={"incomplete_results": True, "total_count": 10}):
+        with patch.object(activity, "api", return_value={"incomplete_results": True, "total_count": 10}), patch.object(activity.time, "sleep"):
             with self.assertRaises(RuntimeError):
                 activity.search_count("commits", "public")
 
     def test_raw_bytes_preserved_without_token(self):
         raw = b'{"total_count":0,"note":"CRLF\r\nretained"}'
         class Response:
+            headers = {}
+            status = 200
             def __enter__(self): return self
             def __exit__(self, *args): return False
             def read(self): return raw
@@ -50,10 +55,13 @@ class ProfileTests(unittest.TestCase):
             run = Path(folder) / "raw" / "run"
             with patch.object(activity, "RAW_RUN", run), patch.object(activity.urllib.request, "urlopen", return_value=Response()), patch.object(activity.json, "loads", return_value={}):
                 activity.api("test-public")
-            files = list(run.iterdir())
+            files = list(run.glob("*.body"))
             self.assertEqual(files[0].read_bytes(), raw)
             self.assertEqual(files[0].stat().st_mode & 0o777, 0o600)
             self.assertEqual(run.stat().st_mode & 0o777, 0o700)
+            metadata = json.loads(next(run.glob("*.meta.json")).read_text())
+            self.assertEqual(metadata["sha256"], hashlib.sha256(raw).hexdigest())
+            self.assertEqual(metadata["bytes"], len(raw))
 
     def test_all_readme_assets_exist(self):
         readme = (ROOT / "README.md").read_text()
@@ -236,6 +244,311 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Posicionamento profissional a definir", readme)
         self.assertNotIn("Sicredi", readme)
         self.assertNotIn("File Insight", readme)
+
+
+class RecoveryTests(unittest.TestCase):
+    complete = {"total_count": 7, "incomplete_results": False}
+    incomplete = {"total_count": 999, "incomplete_results": True}
+
+    class Response:
+        status = 200
+        headers = {"X-GitHub-Request-Id": "synthetic-request"}
+
+        def __init__(self, raw=b'{"ok":true}'):
+            self.raw = raw
+
+        def __enter__(self): return self
+        def __exit__(self, *args): return False
+        def read(self): return self.raw
+
+    def setUp(self):
+        self.folder = tempfile.TemporaryDirectory()
+        self.addCleanup(self.folder.cleanup)
+        self.run = Path(self.folder.name) / "raw" / "run"
+        raw_patch = patch.object(activity, "RAW_RUN", self.run)
+        raw_patch.start()
+        self.addCleanup(raw_patch.stop)
+        sleep_patch = patch.object(activity.time, "sleep")
+        self.sleep = sleep_patch.start()
+        self.addCleanup(sleep_patch.stop)
+        output_patch = patch("sys.stdout", new_callable=io.StringIO)
+        self.stdout = output_patch.start()
+        self.addCleanup(output_patch.stop)
+
+    def error(self, code, headers=None, body=b'{"message":"temporary"}'):
+        return activity.urllib.error.HTTPError("https://api.github.com/test", code, "error", headers or {}, io.BytesIO(body))
+
+    def test_incomplete_search_recovers_after_backoff(self):
+        with patch.object(activity, "api", side_effect=[self.incomplete, self.incomplete, self.complete]) as call:
+            self.assertEqual(activity.search_count("commits", "author:LL0rddd"), 7)
+        self.assertEqual(call.call_count, 3)
+        self.assertEqual([c.args[0] for c in self.sleep.call_args_list], [2, 4])
+
+    def test_month_split_has_no_overlap_and_discards_partial_parent_count(self):
+        query = "author:LL0rddd is:pr created:2026-10-01..2026-10-31"
+        results = [self.incomplete] * 3 + [dict(self.complete, total_count=20), dict(self.complete, total_count=30)]
+        with patch.object(activity, "api", side_effect=results) as call:
+            self.assertEqual(activity.search_count("issues", query), 50)
+        queries = [activity.urllib.parse.parse_qs(activity.urllib.parse.urlsplit(c.args[0]).query)["q"][0]
+                   for c in call.call_args_list]
+        self.assertEqual(queries[:3], [query] * 3)
+        self.assertEqual(queries[3:], ["author:LL0rddd is:pr created:2026-10-01..2026-10-16",
+                                       "author:LL0rddd is:pr created:2026-10-17..2026-10-31"])
+        self.assertIs(call.call_args_list[0].kwargs["budget"], call.call_args_list[-1].kwargs["budget"])
+
+    def test_recursive_split_handles_leap_day_and_keeps_author_scope(self):
+        query = "author:LL0rddd author-date:2024-02-27..2024-03-01"
+        results = [self.incomplete] * 6 + [dict(self.complete, total_count=1),
+                                         dict(self.complete, total_count=2), dict(self.complete, total_count=3)]
+        with patch.object(activity, "api", side_effect=results) as call:
+            self.assertEqual(activity.search_count("commits", query), 6)
+        queries = [activity.urllib.parse.unquote(c.args[0]) for c in call.call_args_list]
+        self.assertIn("author-date:2024-02-29..2024-03-01", queries[-1])
+        self.assertTrue(all("author:LL0rddd" in q and "user:" not in q and "repo:" not in q for q in queries))
+
+    def test_single_day_exhaustion_fails_without_accepting_incomplete_count(self):
+        with patch.object(activity, "api", return_value=self.incomplete) as call:
+            with self.assertRaisesRegex(activity.CollectionUnavailable, "commits.*2026-10-26.*previous assets"):
+                activity.search_count("commits", "author:LL0rddd author-date:2026-10-26..2026-10-26")
+        self.assertEqual(call.call_count, 3)
+
+    def test_missing_or_invalid_search_fields_never_become_zero(self):
+        for payload in ({}, [], {"incomplete_results": False, "total_count": True},
+                        {"incomplete_results": False, "total_count": -1},
+                        {"incomplete_results": False, "total_count": "7"},
+                        {"total_count": 7}, {"incomplete_results": "false", "total_count": 7}):
+            with self.subTest(payload=payload), patch.object(activity, "api", return_value=payload) as call:
+                with self.assertRaisesRegex(activity.CollectionUnavailable, "Invalid search response"):
+                    activity.search_count("commits", "author:LL0rddd")
+                self.assertEqual(call.call_count, 1)
+
+    def test_complete_zero_is_valid(self):
+        with patch.object(activity, "api", return_value=dict(self.complete, total_count=0)):
+            self.assertEqual(activity.search_count("issues", "author:LL0rddd is:pr"), 0)
+        self.sleep.assert_not_called()
+
+    def test_http_503_retry_preserves_all_responses_and_diagnostic_headers(self):
+        first = b'{"message":"try later"}\r\n'
+        error = self.error(503, {"Retry-After": "7", "X-GitHub-Request-Id": "synthetic-503"}, first)
+        with patch.object(activity.urllib.request, "urlopen", side_effect=[error, self.Response()]) as call:
+            self.assertEqual(activity.api("user"), {"ok": True})
+        self.assertEqual(call.call_count, 2)
+        self.sleep.assert_called_once_with(7)
+        self.assertEqual({p.read_bytes() for p in self.run.glob("*.body")}, {first, b'{"ok":true}'})
+        metadata = [json.loads(p.read_text()) for p in self.run.glob("*.meta.json")]
+        self.assertEqual({m["status"] for m in metadata}, {200, 503})
+        self.assertIn("synthetic-503", [m["headers"]["x-github-request-id"] for m in metadata])
+
+    def test_rate_limit_retry_respects_reset_and_does_not_hammer_api(self):
+        headers = {"Retry-After": "5", "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": "1010"}
+        with patch.object(activity.time, "time", return_value=1000), patch.object(activity.urllib.request, "urlopen", side_effect=[self.error(403, headers), self.Response()]):
+            activity.api("user")
+        self.sleep.assert_called_once_with(11)
+
+    def test_timeout_reading_http_error_body_preserves_status_and_retries(self):
+        error = self.error(503, {"X-GitHub-Request-Id": "timeout-body"})
+        with patch.object(error, "read", side_effect=TimeoutError()), patch.object(activity.urllib.request, "urlopen", side_effect=[error, self.Response()]):
+            self.assertEqual(activity.api("user"), {"ok": True})
+        metadata = [json.loads(p.read_text()) for p in self.run.glob("*.meta.json")]
+        partial = next(m for m in metadata if m["status"] == 503)
+        self.assertIn("partial error body", partial["category"])
+        self.assertEqual(partial["headers"]["x-github-request-id"], "timeout-body")
+
+    def test_secondary_rate_limit_without_headers_waits_a_minute(self):
+        error = self.error(403, body=b'{"message":"You have exceeded a secondary rate limit"}')
+        with patch.object(activity.urllib.request, "urlopen", side_effect=[error, self.Response()]):
+            activity.api("user")
+        self.sleep.assert_called_once_with(60)
+
+    def test_retry_after_http_date_is_respected(self):
+        with patch.object(activity.time, "time", return_value=0):
+            self.assertEqual(activity.retry_delay({"Retry-After": "Thu, 01 Jan 1970 00:01:30 GMT"}, 1, True), 90)
+
+    def test_long_rate_limit_aborts_without_retrying_early(self):
+        with patch.object(activity.urllib.request, "urlopen", side_effect=self.error(429, {"Retry-After": "900"})) as call:
+            with self.assertRaisesRegex(activity.CollectionUnavailable, "retry wait exceeds"):
+                activity.api("user")
+        self.assertEqual(call.call_count, 1)
+        self.sleep.assert_not_called()
+
+    def test_authentication_and_permission_errors_are_not_retried(self):
+        for code in (401, 403, 404, 422):
+            with self.subTest(code=code), patch.object(activity.urllib.request, "urlopen", side_effect=self.error(code)) as call:
+                with self.assertRaisesRegex(activity.CollectionUnavailable, f"HTTP {code}.*verify access"):
+                    activity.api("user")
+                self.assertEqual(call.call_count, 1)
+        self.sleep.assert_not_called()
+
+    def test_timeout_network_and_invalid_json_recover_with_finite_attempts(self):
+        failures = (TimeoutError(), activity.urllib.error.URLError("synthetic"), self.Response(b'not json'))
+        for failure in failures:
+            with self.subTest(failure=type(failure).__name__), patch.object(activity.urllib.request, "urlopen", side_effect=[failure, self.Response()]):
+                self.assertEqual(activity.api("user"), {"ok": True})
+
+    def test_network_retry_exhaustion_is_bounded(self):
+        with patch.object(activity.urllib.request, "urlopen", side_effect=TimeoutError()) as call:
+            with self.assertRaisesRegex(activity.CollectionUnavailable, "retry attempts exhausted"):
+                activity.api("user")
+        self.assertEqual(call.call_count, 3)
+        self.assertEqual(len(list(self.run.glob("*.body"))), 3)
+
+    def test_partial_response_bytes_are_saved_before_retry(self):
+        class PartialResponse(self.Response):
+            def read(self):
+                raise activity.http.client.IncompleteRead(b'partial\r\n\xff', 20)
+        with patch.object(activity.urllib.request, "urlopen", side_effect=[PartialResponse(), self.Response()]):
+            activity.api("user")
+        self.assertIn(b'partial\r\n\xff', [p.read_bytes() for p in self.run.glob("*.body")])
+
+    def test_repeated_endpoint_does_not_overwrite_raw_or_record_request_secrets(self):
+        class Response(self.Response):
+            headers = {"X-GitHub-Request-Id": "synthetic-id", "Set-Cookie": "RESPONSE_SECRET"}
+        with patch.dict(activity.os.environ, {"GH_TOKEN": "REQUEST_SECRET_CANARY"}), patch.object(activity.urllib.request, "urlopen", return_value=Response()):
+            activity.api("user")
+            activity.api("user")
+        self.assertEqual(len(list(self.run.glob("*.body"))), 2)
+        self.assertEqual(len(list(self.run.glob("*.meta.json"))), 2)
+        for saved in self.run.iterdir():
+            self.assertEqual(saved.stat().st_mode & 0o777, 0o600)
+            self.assertNotIn(b'REQUEST_SECRET_CANARY', saved.read_bytes())
+            self.assertNotIn(b'RESPONSE_SECRET', saved.read_bytes())
+
+    def test_search_budget_counts_http_retries_and_stops_before_next_request(self):
+        budget = activity.CollectionBudget()
+        with patch.object(activity, "MAX_SEARCH_REQUESTS", 2), patch.object(activity.urllib.request, "urlopen", side_effect=TimeoutError()) as call:
+            with self.assertRaisesRegex(activity.CollectionUnavailable, "Search request budget"):
+                activity.api("search/commits?q=author:LL0rddd", budget=budget)
+        self.assertEqual(call.call_count, 2)
+
+    def test_time_budget_prevents_sleep_and_request_after_deadline(self):
+        budget = activity.CollectionBudget()
+        budget.deadline = activity.time.monotonic() - 1
+        with self.assertRaisesRegex(activity.CollectionUnavailable, "time budget"):
+            budget.timeout()
+        with self.assertRaisesRegex(activity.CollectionUnavailable, "retry wait exceeds"):
+            budget.wait(2, "test")
+        with patch.object(activity.urllib.request, "urlopen") as call:
+            with self.assertRaises(activity.CollectionUnavailable):
+                activity.api("user", budget=budget)
+        call.assert_not_called()
+        self.sleep.assert_not_called()
+
+    def test_failed_collection_does_not_render_or_replace_previous_dashboard(self):
+        root = Path(self.folder.name) / "profile"
+        (root / "assets").mkdir(parents=True)
+        for relative in ("README.md", "assets/activity.json", "assets/activity.svg", "assets/activity.gif"):
+            (root / relative).write_bytes(b'previous-complete-dashboard')
+        before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        with patch.object(activity, "ROOT", root), patch.object(activity, "collect", side_effect=activity.CollectionUnavailable("synthetic failure")), patch.object(activity, "render") as render, patch("sys.stderr", new_callable=io.StringIO):
+            with self.assertRaises(SystemExit) as error:
+                activity.main([])
+        self.assertEqual(error.exception.code, 1)
+        render.assert_not_called()
+        self.assertEqual(before, {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()})
+
+    def test_response_headers_keep_duplicates_sso_and_scopes_with_cookie_masking(self):
+        headers = Message()
+        headers.add_header("Link", "<https://api.github.com/example?page=2>; rel=next")
+        headers.add_header("Link", "<https://api.github.com/example?page=3>; rel=last")
+        headers.add_header("X-GitHub-SSO", "required; url=https://github.com/orgs/PRIVATE_ORG/sso")
+        headers.add_header("X-OAuth-Scopes", "repo, workflow")
+        headers.add_header("GitHub-Authentication-Token-Expiration", "2027-01-01 00:00:00 UTC")
+        headers.add_header("Set-Cookie", "PRIVATE_COOKIE_VALUE_123456789")
+        headers.add_header("Set-Cookie", "SHORT")
+        response = self.Response()
+        response.headers = headers
+        with patch.object(activity.urllib.request, "urlopen", return_value=response):
+            activity.api("user/repos?visibility=all&page=1")
+        saved = json.loads(next(self.run.glob("*.meta.json")).read_text())
+        self.assertEqual(len([v for key, v in saved["header_items"] if key == "link"]), 2)
+        cookies = [v for key, v in saved["header_items"] if key == "set-cookie"]
+        self.assertEqual(cookies[0]["bytes"], len("PRIVATE_COOKIE_VALUE_123456789"))
+        self.assertIn("sha256_prefix", cookies[0])
+        self.assertNotIn("sha256_prefix", cookies[1])
+        self.assertEqual(saved["masked_headers"], ["set-cookie", "set-cookie"])
+        self.assertIn("PRIVATE_ORG", saved["headers"]["x-github-sso"])
+        self.assertEqual(saved["headers"]["x-oauth-scopes"], "repo, workflow")
+        self.assertIn("github-authentication-token-expiration", saved["headers"])
+        for value in ("PRIVATE_ORG", "PRIVATE_COOKIE_VALUE_123456789", "SHORT", "repo, workflow"):
+            self.assertNotIn(value, self.stdout.getvalue())
+        self.assertNotIn("PRIVATE_COOKIE_VALUE_123456789", json.dumps(saved))
+
+    def test_attempt_timing_exception_reason_and_token_mask_are_saved(self):
+        token = "REQUEST_SECRET_CANARY"
+        error = activity.urllib.error.URLError("TLS failure with " + token)
+        with patch.dict(activity.os.environ, {"GH_TOKEN": token}), patch.object(activity.urllib.request, "urlopen", side_effect=[error, self.Response()]):
+            activity.api("user")
+        metadata = [json.loads(p.read_text()) for p in self.run.glob("*.meta.json")]
+        failed = next(m for m in metadata if m["status"] is None)
+        self.assertEqual(failed["attempt"], 1)
+        self.assertGreater(failed["timeout"], 0)
+        self.assertTrue(failed["started_at"].endswith("+00:00"))
+        self.assertGreaterEqual(failed["elapsed_ms"], 0)
+        self.assertEqual(failed["exception"]["type"], "URLError")
+        self.assertIn("TLS failure", failed["exception"]["detail"])
+        self.assertIn("omitted", failed["exception"]["detail"])
+        self.assertNotIn(token, json.dumps(metadata) + self.stdout.getvalue())
+
+    def test_tls_and_http_protocol_read_errors_are_preserved_and_retried(self):
+        for error in (ssl.SSLError("synthetic TLS"), activity.http.client.LineTooLong("synthetic header"), OSError("synthetic socket")):
+            class FailedRead(self.Response):
+                def read(self): raise error
+            with self.subTest(kind=type(error).__name__), patch.object(activity.urllib.request, "urlopen", side_effect=[FailedRead(), self.Response()]) as call:
+                self.assertEqual(activity.api("user"), {"ok": True})
+                self.assertEqual(call.call_count, 2)
+        metadata = [json.loads(p.read_text()) for p in self.run.glob("*.meta.json")]
+        self.assertTrue({"SSLError", "LineTooLong", "OSError"}.issubset(
+            {m["exception"]["type"] for m in metadata if "exception" in m}))
+
+    def test_public_diagnostic_logs_have_ids_and_limits_without_private_payload(self):
+        response = self.Response(b'{"private_name":"PRIVATE_PAYLOAD_CANARY"}')
+        response.headers = {"X-GitHub-Request-Id": "safe-request-id", "X-RateLimit-Remaining": "17", "X-RateLimit-Reset": "2000000000"}
+        with patch.object(activity.urllib.request, "urlopen", return_value=response):
+            activity.api("search/issues?per_page=1&q=author%3ALL0rddd%20created%3A2026-10-01..2026-10-26")
+        line = next(line for line in self.stdout.getvalue().splitlines() if line.startswith("Activity request: "))
+        public = json.loads(line.removeprefix("Activity request: "))
+        self.assertEqual(public["kind"], "search/issues 2026-10-01..2026-10-26")
+        self.assertEqual(public["request_id"], "safe-request-id")
+        self.assertEqual(public["rate_remaining"], "17")
+        self.assertEqual(public["rate_reset"], "2000000000")
+        self.assertEqual(public["attempt"], 1)
+        self.assertIn("elapsed_ms", public)
+        self.assertNotIn("PRIVATE_PAYLOAD_CANARY", self.stdout.getvalue())
+
+    def test_secondary_rate_limit_second_wait_is_120_seconds(self):
+        errors = [self.error(429), self.error(429), self.Response()]
+        with patch.object(activity.urllib.request, "urlopen", side_effect=errors):
+            activity.api("user")
+        self.assertEqual([c.args[0] for c in self.sleep.call_args_list], [60, 120])
+
+    def test_collect_shares_real_search_budget_across_all_six_months(self):
+        user = {"login": "LL0rddd", "owned_private_repos": 1}
+        repos = [{"owner": {"login": "LL0rddd"}, "private": True, "fork": False,
+                  "created_at": "2026-01-01T00:00:00Z", "name": "PRIVATE_REPO_CANARY"}]
+        responses = [self.Response(json.dumps(payload).encode()) for payload in (user, repos)]
+        responses += [self.Response(json.dumps(self.complete).encode()) for _ in range(12)]
+        budgets = []
+        original = activity.CollectionBudget
+        def tracked_budget():
+            budget = original()
+            budgets.append(budget)
+            return budget
+        with patch.dict(activity.os.environ, {"GH_TOKEN": "synthetic-test-value"}), patch.object(activity, "CollectionBudget", side_effect=tracked_budget), patch.object(activity.urllib.request, "urlopen", side_effect=responses) as call:
+            snapshot = activity.collect(date(2026, 10, 26))
+        activity.validate_snapshot(snapshot)
+        self.assertEqual(call.call_count, 14)
+        self.assertEqual(len(budgets), 1)
+        self.assertEqual(budgets[0].searches, 12)
+        self.assertEqual(len(list(self.run.glob("*.body"))), 14)
+        self.assertNotIn("PRIVATE_REPO_CANARY", self.stdout.getvalue() + json.dumps(snapshot))
+
+    def test_exhaustion_messages_keep_required_wait_and_request_counts(self):
+        budget = activity.CollectionBudget()
+        with self.assertRaisesRegex(activity.CollectionUnavailable, "required=900.0s.*remaining=.*wait_limit=120"):
+            budget.wait(900, "GitHub HTTP 429")
+        budget.searches = activity.MAX_SEARCH_REQUESTS
+        with self.assertRaisesRegex(activity.CollectionUnavailable, "search/commits 2026-10-01..2026-10-26; used=90, limit=90"):
+            budget.request("search/commits?q=author%3ALL0rddd%20author-date%3A2026-10-01..2026-10-26")
 
 
 if __name__ == "__main__":

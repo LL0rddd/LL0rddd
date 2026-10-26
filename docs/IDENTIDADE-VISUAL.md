@@ -53,6 +53,34 @@ mensagens de commit, títulos de PRs, URLs ou outros detalhes dos repositórios 
   sem autenticação, sem privados visíveis ou com busca incompleta; não recua silenciosamente
   para números exclusivamente públicos. Quando a API informa a contagem privada esperada,
   ela é comparada à paginação. Uma credencial restrita ainda limita a cobertura disponível.
+- Buscas incompletas são repetidas até três vezes, com esperas de 2 e 4 segundos.
+  Se persistirem, o intervalo é dividido em duas partes sem sobreposição, até o mínimo
+  de um dia. Só resultados completos são somados; a contagem parcial da busca original
+  nunca entra no total. Autoria, colaborações, privados e os últimos seis meses permanecem.
+- Timeouts, respostas parciais/JSON inválido e HTTP 408/429/500/502/503/504 têm até três
+  tentativas; HTTP 403 só é repetido quando há indicação de rate limit. A espera respeita
+  `Retry-After` e `X-RateLimit-Reset`; limites secundários sem esses prazos aguardam pelo
+  menos um minuto. Erros de autenticação/permissão/configuração não são repetidos.
+- A coleta inteira compartilha um orçamento de 7 minutos (conferido entre operações)
+  e 90 requisições de busca,
+  incluindo novas tentativas e subdivisões. Esperas necessárias acima de 120 segundos
+  encerram a execução sem consultar antes do permitido. Ao esgotar tentativas, prazo
+  ou requisições, preserva o dashboard anterior e sinaliza falha, nunca sucesso fictício.
+- Cada tentativa guarda o corpo bruto, inclusive erros e respostas parciais, em arquivo
+  exclusivo `.metrics-raw/*.body` com SHA-256, tamanho, status, tentativa, timeout, início
+  UTC, duração e tipo/motivo de exceção em um sidecar. Cabeçalhos de resposta mantêm a
+  ordem e valores repetidos em `header_items`; `headers` é a visão conveniente do último
+  valor. Cabeçalhos sensíveis (autenticação/cookies) são substituídos por tamanho/hash,
+  com máscara declarada em `masked_headers`; detalhes de exceção também protegem tokens.
+  As permissões seguem 700/600. Nada disso é publicado como artifact.
+- O log público registra por tentativa somente categoria/tipo da falha, período,
+  status, request-id, contadores de rate limit, bytes/hash e duração; nunca o corpo,
+  nomes privados, SSO, escopos, cookies ou mensagens completas de exceção. Erros de
+  orçamento informam espera necessária/restante e quantas buscas foram consumidas.
+  No runner efêmero, o bruto permanece temporário; o log técnico seguro é o diagnóstico
+  persistente. O job tem limite final de 10 minutos (o timeout de socket não é um prazo
+  absoluto para leitura de corpo). Em coleta local, o bruto continua preservado.
+  Isso reduz falhas transitórias, mas não garante disponibilidade ou indexação do GitHub.
 
 ### Atualização automática
 
@@ -82,6 +110,8 @@ Referências: [agendamento no GitHub Actions](https://docs.github.com/en/actions
 [escopo do GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token),
 [busca de PRs por autor](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests#search-by-author)
 e [busca de commits](https://docs.github.com/en/search-github/searching-on-github/searching-commits).
+Tratamento de falhas: [buscas incompletas](https://docs.github.com/en/rest/search/search#timeouts-and-incomplete-results)
+e [limites e novas tentativas](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api#handle-rate-limit-errors-appropriately).
 
 Para atualizar manualmente, usando uma credencial já disponível em `GH_TOKEN` ou
 `GITHUB_TOKEN` (nunca escreva seu valor no comando):
