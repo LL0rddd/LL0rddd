@@ -22,8 +22,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/versioned/activity-9f72f466afa6.svg">
-    <img src="./assets/versioned/activity-b264a11c7075.gif" width="580" alt="Atividade agregada em código: commits e PRs de minha autoria em repositórios públicos e privados, incluindo colaborações; repositórios próprios sem forks. Atualização automática horária dos últimos seis meses, incluindo o atual parcial. Sem nomes ou conteúdo privado; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
+    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/versioned/activity-ba4b8fbea03b.svg">
+    <img src="./assets/versioned/activity-1912d06b8b90.gif" width="580" alt="Atividade agregada em código: commits e PRs de minha autoria em repositórios públicos e privados, incluindo colaborações; repositórios próprios sem forks. Atualização automática horária dos últimos seis meses, incluindo o atual parcial. Sem nomes ou conteúdo privado; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
   </picture>
 </p>
 
