@@ -5,7 +5,7 @@
 <text x="16" y="24" fill="#f1f5f9" font-size="12" font-family="Segoe UI,Helvetica,Arial,sans-serif">Atividade em código</text>
 <text x="360" y="24" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun–nov 2026 · públicos + privados</text>
 <text x="16" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Commits</text>
-<text x="16" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">2.474</text>
+<text x="16" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">2.527</text>
 <path d="M16 127 H184" fill="none" stroke="#233653"/>
 <rect x="22" y="127.00" width="14" height="0.00" rx="2" fill="#22d3ee"><title>jun: 0</title></rect>
 <text x="20" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
@@ -17,11 +17,11 @@
 <text x="101" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
 <rect x="130" y="95.75" width="14" height="31.25" rx="2" fill="#22d3ee"><title>out: 1644</title></rect>
 <text x="128" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">out</text>
-<rect x="157" y="115.90" width="14" height="11.10" rx="2" fill="#22d3ee"><title>nov: 584</title></rect>
+<rect x="157" y="114.89" width="14" height="12.11" rx="2" fill="#22d3ee"><title>nov: 637</title></rect>
 <text x="155" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">nov</text>
 <text x="16" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">indexados em 6 meses</text>
 <text x="206" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Pull requests</text>
-<text x="206" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">113</text>
+<text x="206" y="77" fill="#f1f5f9" font-size="20" font-family="Segoe UI,Helvetica,Arial,sans-serif">117</text>
 <path d="M206 127 H374" fill="none" stroke="#233653"/>
 <rect x="212" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>jun: 0</title></rect>
 <text x="210" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jun</text>
@@ -29,11 +29,11 @@
 <text x="237" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">jul</text>
 <rect x="266" y="127.00" width="14" height="0.00" rx="2" fill="#a78bfa"><title>ago: 0</title></rect>
 <text x="264" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">ago</text>
-<rect x="293" y="125.98" width="14" height="1.02" rx="2" fill="#a78bfa"><title>set: 2</title></rect>
+<rect x="293" y="126.04" width="14" height="0.96" rx="2" fill="#a78bfa"><title>set: 2</title></rect>
 <text x="291" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">set</text>
-<rect x="320" y="101.39" width="14" height="25.61" rx="2" fill="#a78bfa"><title>out: 50</title></rect>
+<rect x="320" y="102.96" width="14" height="24.04" rx="2" fill="#a78bfa"><title>out: 50</title></rect>
 <text x="318" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">out</text>
-<rect x="347" y="95.75" width="14" height="31.25" rx="2" fill="#a78bfa"><title>nov: 61</title></rect>
+<rect x="347" y="95.75" width="14" height="31.25" rx="2" fill="#a78bfa"><title>nov: 65</title></rect>
 <text x="345" y="143" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">nov</text>
 <text x="206" y="161" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">criados em 6 meses</text>
 <text x="396" y="51" fill="#b4c3d5" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">Repositórios</text>
