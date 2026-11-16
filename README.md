@@ -9,16 +9,14 @@
 </p>
 
 <p align="center">
-  Desenvolvo ferramentas, automações e integrações voltadas à <strong>qualidade de software</strong>,
-  à <strong>produtividade técnica</strong> e à <strong>segurança operacional</strong>.
+  Sou engenheiro de <strong>edge e segurança</strong>: CDN, DNS, WAF e APIs para clientes estratégicos,
+  com mais de 18 anos em tecnologia.
 </p>
 
 <p align="center">
-  Meu portfólio reúne aplicações em Python e Node.js, workflows com n8n, testes automatizados
-  e ferramentas desktop construídas com TypeScript, React e Electron.
+  Também construo as <strong>ferramentas com IA</strong> que uso nesse trabalho: agentes, automações e integrações
+  que encurtam a análise de incidentes e deixam cada conclusão presa a uma evidência.
 </p>
-
-<!-- Posicionamento profissional a definir em revisão futura. -->
 
 <p align="center">
   <picture>

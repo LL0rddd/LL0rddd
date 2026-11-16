@@ -235,13 +235,16 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual(image.size, (1160, 410))
         self.assertIn("prefers-reduced-motion", (ROOT / "README.md").read_text())
 
-    def test_private_project_order_and_pending_title_preserved(self):
+    def test_private_project_order_and_positioning(self):
         readme = (ROOT / "README.md").read_text()
         positions = [readme.index('alt="' + name + '"') for name in
                      ("Prompt Forge", "Requests Automations", "Jira Issue Analyzer", "Clean Git Commit")]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("estão privados no momento", readme)
-        self.assertIn("Posicionamento profissional a definir", readme)
+        # Posicionamento definido em 16/11/2026: edge e segurança + ferramentas com IA.
+        self.assertNotIn("Posicionamento profissional a definir", readme)
+        self.assertIn("<strong>edge e segurança</strong>", readme)
+        self.assertIn("<strong>ferramentas com IA</strong>", readme)
         self.assertNotIn("Sicredi", readme)
         self.assertNotIn("File Insight", readme)
 
