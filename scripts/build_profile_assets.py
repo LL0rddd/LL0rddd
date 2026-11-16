@@ -5,13 +5,14 @@ Network is used only with --download. No credentials are needed for brand assets
 import argparse
 import base64
 import hashlib
+import io
 import json
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from PIL import ImageFont
+from PIL import Image, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
@@ -32,7 +33,21 @@ SOURCES = {
     "claudecode.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/claudecode-color.png",
     "codex.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/codex.png",
     "antigravity.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/antigravity-color.png",
+    # 16/11/2026: logos dos repositórios dos donos, fixados por commit.
+    "bash.svg": "https://cdn.jsdelivr.net/gh/odb/official-bash-logo@e44dab9f89aadd410ff04825b2692eab16711211/assets/Logos/Icons/SVG/BASH_logo-transparent-bg-bw-02.svg",
+    "terraform.svg": "https://cdn.jsdelivr.net/gh/hashicorp/design-system@c154baed65efab69a9497fc0f06c99a25554247f/packages/flight-icons/svg-original/terraform-color-24.svg",
+    "github-actions.svg": "https://cdn.jsdelivr.net/gh/primer/octicons@68ec2de8d0ddfcbb7497da01d0b7d98eb5593020/icons/workflow-24.svg",
+    "git.svg": "https://cdn.jsdelivr.net/gh/git/git-scm.com@128a0d9c1f7eaa5678ea9a10257c9c0680786590/static/images/logos/downloads/Git-Icon-1788C.svg",
+    "postman.svg": "https://cdn.jsdelivr.net/gh/postmanlabs/schemas@c5fa20c6210207d09b06a23d700f9228c31ad703/src/assets/postman-logo-orange.svg",
+    # O SVG oficial do SQLite (art/sqlite370.svg) junta a pena ao nome; o ícone sozinho só existe em GIF.
+    "sqlite.gif": "https://cdn.jsdelivr.net/gh/sqlite/sqlite@f1db7c28018f6a15ce1ed8439f340170177973f8/art/icon-243x273.gif",
+    "bigquery.svg": "https://cdn.jsdelivr.net/gh/GoogleCloudPlatform/devrel-demos@f97aea01926e0e7872ab52eda80070d8625faa62/app-dev/party-game/public/google-cloud-icons/bigquery.svg",
+    "pandas.svg": "https://cdn.jsdelivr.net/gh/pandas-dev/pandas@6172bbfd3d1706309d1854ad0ea8bab927ceca96/web/pandas/static/img/pandas_mark.svg",
+    "mcp.svg": "https://cdn.jsdelivr.net/gh/modelcontextprotocol/modelcontextprotocol@de3550c9fea3c5269e42ac95204eef44a2b2cb92/docs/logo/dark.svg",
+    "obsidian.svg": "https://cdn.jsdelivr.net/gh/obsidianmd/obsidian-developer-docs@1c26772ac13d6e9870c865936d389fdfe694e742/en/Assets/logo.svg",
 }
+# Logos com o nome escrito ao lado (lockup): o recorte mostra só o símbolo, sem alterar o desenho.
+LOGO_VIEWBOX = {"mcp.svg": "0 0 195 195"}
 TONES = {"blue": ("#67d7ff", "#193346"),
          "purple": ("#c4b5fd", "#302943"),
          "green": ("#5eead4", "#193b39")}
@@ -120,15 +135,25 @@ def technology(name, label, filename, background, foreground="#ffffff"):
     root = svg(width, height, label)
     add(root, "rect", width=width, height=height, fill=background)
     add(root, "rect", x=3, y=3, width=22, height=22,
-        fill="#ffffff" if name in ("codex", "n8n") else "#17202d")
+        fill="#ffffff" if name in ("codex", "n8n", "bash", "github-actions", "sqlite", "pandas") else "#17202d")
     source = ASSETS / "brands" / filename
     if source.suffix == ".svg":
         logo = ET.parse(source).getroot()
         logo.attrib.update(x="6", y="6", width="16", height="16")
+        if filename in LOGO_VIEWBOX:
+            logo.attrib["viewBox"] = LOGO_VIEWBOX[filename]
         root.append(logo)
     else:
+        data = source.read_bytes()
+        if source.suffix == ".gif":
+            # Só troca o formato (GIF -> PNG, com a transparência); o desenho é o original.
+            buffer = io.BytesIO()
+            image = Image.open(source).convert("RGBA")
+            image.thumbnail((64, 64))  # 4x o tamanho exibido (16 px): nítido em tela 2x e o selo fica leve
+            image.save(buffer, "PNG", optimize=True)
+            data = buffer.getvalue()
         add(root, "image", x=6, y=6, width=16, height=16,
-            href="data:image/png;base64," + base64.b64encode(source.read_bytes()).decode())
+            href="data:image/png;base64," + base64.b64encode(data).decode())
     text = add(root, "text", x=left + 6, y=18, fill=foreground, font_size=11,
                font_family="Segoe UI,system-ui,sans-serif" if name == "antigravity" else "Segoe UI,Helvetica,Arial,sans-serif")
     text.text = label
@@ -141,11 +166,13 @@ def technology(name, label, filename, background, foreground="#ffffff"):
     save(root, name + ".svg")
 
 
-def download():
-    sources = dict(SOURCES)
-    sources.update({"../icons/" + name + ".svg": LUCIDE + "/icons/" + name + ".svg" for name in ICONS})
-    sources["../icons/LUCIDE-LICENSE"] = LUCIDE + "/LICENSE"
-    sources["LOBE-LICENSE"] = "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/LICENSE"
+def download(only=None):
+    sources = dict(SOURCES) if not only else {name: SOURCES[name] for name in only}
+    if not only:
+        sources.update({"../icons/" + name + ".svg": LUCIDE + "/icons/" + name + ".svg" for name in ICONS})
+    if not only:
+        sources["../icons/LUCIDE-LICENSE"] = LUCIDE + "/LICENSE"
+        sources["LOBE-LICENSE"] = "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/LICENSE"
     for name, url in sources.items():
         # Download only the fixed public list. Never accept arbitrary destinations or credentials.
         target = ASSETS / "brands" / name
@@ -164,7 +191,7 @@ def download():
         target.write_bytes(data)
     (ASSETS / "sources.json").write_text(json.dumps({
         "brands": SOURCES, "lucide": LUCIDE,
-        "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21."
+        "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21; the commit-pinned set (bash to obsidian) on 2026-11-16."
     }, indent=2) + "\n", encoding="utf-8")
 
 
@@ -201,6 +228,16 @@ def build():
         ("streamlit", "Streamlit", "streamlit.svg", "#ff4b4b"),
         ("n8n", "n8n", "n8n.svg", "#ea4b71"),
         ("playwright", "Playwright", "playwright.svg", "#2ead33"),
+        ("bash", "Bash", "bash.svg", "#2f3a3e"),
+        ("terraform", "Terraform", "terraform.svg", "#7b42bc"),
+        ("github-actions", "GitHub Actions", "github-actions.svg", "#2088ff"),
+        ("git", "Git", "git.svg", "#f05032"),
+        ("postman", "Postman", "postman.svg", "#ff6c37"),
+        ("sqlite", "SQLite", "sqlite.gif", "#003b57"),
+        ("bigquery", "BigQuery", "bigquery.svg", "#4285f4"),
+        ("pandas", "pandas", "pandas.svg", "#150458"),
+        ("mcp", "MCP", "mcp.svg", "#17202d", "#f1f5f9"),
+        ("obsidian", "Obsidian", "obsidian.svg", "#4a37a0"),
         ("claude-code", "Claude Code", "claudecode.png", "#d97757", "#141413"),
         ("codex", "Codex", "codex.png", "#ffffff", "#000000"),
         ("antigravity", "Antigravity/Gemini", "antigravity.png", "#17202d", "#f1f5f9")):
@@ -211,8 +248,9 @@ def build():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--download", action="store_true")
+    parser.add_argument("--only", nargs="+", choices=sorted(SOURCES), help="com --download: baixa só estes arquivos")
     args = parser.parse_args()
     if args.download:
-        download()
+        download(args.only)
     build()
     print("Profile assets built successfully")

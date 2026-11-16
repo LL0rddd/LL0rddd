@@ -49,7 +49,18 @@
   <img src="./assets/badges/playwright.svg" height="28" alt="Playwright">
 </p>
 
-`Shell` · `Express` · `EJS` · `Terraform` · `GitHub Actions` · `pytest` · `unittest` · `node:test` · `Vitest` · `Postman` · `SQLite` · `Google BigQuery` · `Azion SQL` · `pandas` · `Git` · `JSON` · `CSV`
+<p>
+  <img src="./assets/badges/bash.svg" height="28" alt="Bash">
+  <img src="./assets/badges/terraform.svg" height="28" alt="Terraform">
+  <img src="./assets/badges/github-actions.svg" height="28" alt="GitHub Actions">
+  <img src="./assets/badges/git.svg" height="28" alt="Git">
+  <img src="./assets/badges/postman.svg" height="28" alt="Postman">
+  <img src="./assets/badges/sqlite.svg" height="28" alt="SQLite">
+  <img src="./assets/badges/bigquery.svg" height="28" alt="Google BigQuery">
+  <img src="./assets/badges/pandas.svg" height="28" alt="pandas">
+</p>
+
+`Express` · `EJS` · `pytest` · `unittest` · `node:test` · `Vitest` · `Azion SQL` · `JSON` · `CSV`
 
 Inteligência artificial
 
@@ -57,9 +68,11 @@ Inteligência artificial
   <img src="./assets/badges/claude-code.svg" height="28" alt="Claude Code">
   <img src="./assets/badges/codex.svg" height="28" alt="Codex">
   <img src="./assets/versioned/antigravity-913a9b84400b.svg" height="28" alt="Antigravity/Gemini">
+  <img src="./assets/badges/mcp.svg" height="28" alt="MCP">
+  <img src="./assets/badges/obsidian.svg" height="28" alt="Obsidian">
 </p>
 
-`Claude API` · `OpenAI API` · `Amazon Bedrock` · `MCP` · `RAG` · `tool use` · `Grafos de conhecimento` · `Obsidian`
+`Claude API` · `OpenAI API` · `Amazon Bedrock` · `RAG` · `tool use` · `Grafos de conhecimento`
 
 ## Projetos selecionados
 

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:ns2="http://www.inkscape.org/namespaces/inkscape" xmlns:ns4="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="73" height="28" viewBox="0 0 73 28" role="img"><title>pandas</title><rect width="73" height="28" fill="#150458" /><rect x="3" y="3" width="22" height="22" fill="#ffffff" /><svg id="Layer_1" data-name="Layer 1" viewBox="0 0 210.21 280.43" version="1.1" ns1:docname="pandas_mark.svg" ns2:version="0.92.4 (unknown)" x="6" y="6" width="16" height="16">
+  <metadata id="metadata27">
+    <rdf:RDF>
+      <ns4:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </ns4:Work>
+    </rdf:RDF>
+  </metadata>
+  <ns1:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" ns2:pageopacity="0" ns2:pageshadow="2" ns2:window-width="1131" ns2:window-height="921" id="namedview25" showgrid="false" ns2:zoom="0.84156476" ns2:cx="107.48153" ns2:cy="140.215" ns2:window-x="0" ns2:window-y="0" ns2:window-maximized="0" ns2:current-layer="Layer_1" />
+  <defs id="defs4">
+    <style id="style2">.cls-1{fill:#130754;}.cls-2{fill:#48e5ac;}.cls-3{fill:#e70488;}</style>
+  </defs>
+  <title id="title6">Artboard 61</title>
+  <rect class="cls-1" x="74.51" y="43.03" width="24.09" height="50.02" id="rect8" />
+  <rect class="cls-1" x="74.51" y="145.78" width="24.09" height="50.02" id="rect10" />
+  <rect class="cls-2" x="74.51" y="107.65" width="24.09" height="23.6" id="rect12" style="fill:#ffca00;fill-opacity:1" />
+  <rect class="cls-1" x="35.81" y="84.15" width="24.09" height="166.27" id="rect14" />
+  <rect class="cls-1" x="112.41" y="187.05" width="24.09" height="50.02" id="rect16" />
+  <rect class="cls-1" x="112.41" y="84.21" width="24.09" height="50.02" id="rect18" />
+  <rect class="cls-3" x="112.41" y="148.84" width="24.09" height="23.6" id="rect20" />
+  <rect class="cls-1" x="150.3" y="30" width="24.09" height="166.27" id="rect22" />
+</svg><text x="31" y="18" fill="#ffffff" font-size="11" font-family="Segoe UI,Helvetica,Arial,sans-serif">pandas</text></svg>

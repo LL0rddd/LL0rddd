@@ -99,6 +99,19 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual(len(list((root / "assets/versioned").iterdir())), 2)
             self.assertEqual(original_versions[0].read_text(), "synthetic-image")
 
+    def test_stack_logos_replace_text_and_sources_are_pinned(self):
+        readme = (ROOT / "README.md").read_text()
+        for name in ("bash", "terraform", "github-actions", "git", "postman", "sqlite", "bigquery", "pandas",
+                     "mcp", "obsidian"):
+            self.assertIn('./assets/badges/' + name + '.svg"', readme)
+            source = next(k for k in profile_assets.SOURCES if k.split(".")[0] == name)
+            self.assertRegex(profile_assets.SOURCES[source], r"@[0-9a-f]{40}/", source)
+            self.assertTrue((ROOT / "assets/brands" / source).is_file(), source)
+        chips = set(re.findall(r"`([^`]+)`", readme.split("## Stack em uso", 1)[1].split("## Projetos", 1)[0]))
+        for text in ("Shell", "Terraform", "GitHub Actions", "Postman", "SQLite", "Google BigQuery", "pandas",
+                     "Git", "MCP", "Obsidian"):
+            self.assertNotIn(text, chips)
+
     def test_svg_assets_are_local_and_inert(self):
         for asset in (ROOT / "assets").rglob("*.svg"):
             doc = ET.parse(asset).getroot()

@@ -10,8 +10,18 @@
     "playwright.svg": "https://cdn.jsdelivr.net/gh/microsoft/playwright@main/packages/dashboard/public/playwright-logo.svg",
     "claudecode.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/claudecode-color.png",
     "codex.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/light/codex.png",
-    "antigravity.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/antigravity-color.png"
+    "antigravity.png": "https://cdn.jsdelivr.net/gh/lobehub/lobe-icons@master/packages/static-png/dark/antigravity-color.png",
+    "bash.svg": "https://cdn.jsdelivr.net/gh/odb/official-bash-logo@e44dab9f89aadd410ff04825b2692eab16711211/assets/Logos/Icons/SVG/BASH_logo-transparent-bg-bw-02.svg",
+    "terraform.svg": "https://cdn.jsdelivr.net/gh/hashicorp/design-system@c154baed65efab69a9497fc0f06c99a25554247f/packages/flight-icons/svg-original/terraform-color-24.svg",
+    "github-actions.svg": "https://cdn.jsdelivr.net/gh/primer/octicons@68ec2de8d0ddfcbb7497da01d0b7d98eb5593020/icons/workflow-24.svg",
+    "git.svg": "https://cdn.jsdelivr.net/gh/git/git-scm.com@128a0d9c1f7eaa5678ea9a10257c9c0680786590/static/images/logos/downloads/Git-Icon-1788C.svg",
+    "postman.svg": "https://cdn.jsdelivr.net/gh/postmanlabs/schemas@c5fa20c6210207d09b06a23d700f9228c31ad703/src/assets/postman-logo-orange.svg",
+    "sqlite.gif": "https://cdn.jsdelivr.net/gh/sqlite/sqlite@f1db7c28018f6a15ce1ed8439f340170177973f8/art/icon-243x273.gif",
+    "bigquery.svg": "https://cdn.jsdelivr.net/gh/GoogleCloudPlatform/devrel-demos@f97aea01926e0e7872ab52eda80070d8625faa62/app-dev/party-game/public/google-cloud-icons/bigquery.svg",
+    "pandas.svg": "https://cdn.jsdelivr.net/gh/pandas-dev/pandas@6172bbfd3d1706309d1854ad0ea8bab927ceca96/web/pandas/static/img/pandas_mark.svg",
+    "mcp.svg": "https://cdn.jsdelivr.net/gh/modelcontextprotocol/modelcontextprotocol@de3550c9fea3c5269e42ac95204eef44a2b2cb92/docs/logo/dark.svg",
+    "obsidian.svg": "https://cdn.jsdelivr.net/gh/obsidianmd/obsidian-developer-docs@1c26772ac13d6e9870c865936d389fdfe694e742/en/Assets/logo.svg"
   },
   "lucide": "https://cdn.jsdelivr.net/npm/lucide-static@0.468.0",
-  "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21."
+  "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21; the commit-pinned set (bash to obsidian) on 2026-11-16."
 }
