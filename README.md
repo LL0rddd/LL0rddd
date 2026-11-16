@@ -27,22 +27,14 @@
 
 ## O que eu construo
 
-<table>
-  <tr>
-    <td width="33%" valign="top">
-      <h3><img src="./assets/badges/build-edge-security.svg" height="36" alt="Edge e segurança"></h3>
-      <p>CDN, cache, DNS, WAF e bot protection para clientes estratégicos. Causa raiz a partir de logs, indicadores e evidências, com mitigação rápida em incidente crítico.</p>
-    </td>
-    <td width="33%" valign="top">
-      <h3><img src="./assets/badges/build-ai-tools.svg" height="36" alt="Ferramentas com IA"></h3>
-      <p>Claude Code, Codex e Gemini conectados por MCP, com modelos fixados e revisão cruzada, analisando tickets, HAR, NetLog, MTR e access logs. A decisão crítica continua testável e auditável.</p>
-    </td>
-    <td width="33%" valign="top">
-      <h3><img src="./assets/badges/build-automation-evidence.svg" height="36" alt="Automação com evidência"></h3>
-      <p>Python, Node.js, n8n e Terraform com Jira, Freshdesk, Slack, ServiceNow e APIs da Azion. Testes nos fluxos negativos e de borda, rollback, SHA-256 e dado sensível mascarado.</p>
-    </td>
-  </tr>
-</table>
+<h3><img src="./assets/badges/build-edge-security.svg" height="36" alt="Edge e segurança"></h3>
+<p>CDN, cache, DNS, WAF e bot protection para clientes estratégicos. Causa raiz a partir de logs, indicadores e evidências, com mitigação rápida em incidente crítico.</p>
+
+<h3><img src="./assets/badges/build-ai-tools.svg" height="36" alt="Ferramentas com IA"></h3>
+<p>Claude Code, Codex e Gemini conectados por MCP, com modelos fixados e revisão cruzada, analisando tickets, HAR, NetLog, MTR e access logs. A decisão crítica continua testável e auditável.</p>
+
+<h3><img src="./assets/badges/build-automation-evidence.svg" height="36" alt="Automação com evidência"></h3>
+<p>Python, Node.js, n8n e Terraform com Jira, Freshdesk, Slack, ServiceNow e APIs da Azion. Testes nos fluxos negativos e de borda, rollback, SHA-256 e dado sensível mascarado.</p>
 
 ## Stack em uso
 

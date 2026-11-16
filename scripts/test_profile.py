@@ -251,7 +251,8 @@ class ProfileTests(unittest.TestCase):
                  ("edge-security", "ai-tools", "automation", "build-edge-security", "build-ai-tools",
                   "build-automation-evidence")]
         self.assertEqual(selos, sorted(selos))
-        for antigo in ("quality.svg", "integrations.svg", "build-security.svg", "build-automation.svg"):
+        for antigo in ("quality.svg", "integrations.svg", "build-automation.svg",
+                       "build-quality.svg", "build-integrations.svg", "build-security.svg"):
             self.assertNotIn('./assets/badges/' + antigo + '"', readme)
         self.assertNotIn("Sicredi", readme)
         self.assertNotIn("File Insight", readme)
