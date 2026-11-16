@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/profile-header.svg" width="100%" alt="Lucas Aguiar — Qualidade de software, integrações de APIs e ferramentas para desenvolvedores">
+  <img src="./assets/versioned/profile-header-6a797b71b12c.svg" width="100%" alt="Lucas Aguiar — Edge e segurança: CDN, DNS, WAF e APIs, com ferramentas de IA">
 </p>
 
 <p align="center">

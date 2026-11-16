@@ -70,7 +70,8 @@ class ProfileTests(unittest.TestCase):
 
     def test_changed_images_have_content_versions_in_readme(self):
         readme = (ROOT / "README.md").read_text()
-        for relative in ("assets/activity.gif", "assets/activity.svg", "assets/badges/antigravity.svg"):
+        for relative in ("assets/activity.gif", "assets/activity.svg", "assets/badges/antigravity.svg",
+                         "assets/profile-header.svg"):
             digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()[:12]
             source = Path(relative)
             versioned = Path("assets/versioned") / (source.stem + "-" + digest + source.suffix)
