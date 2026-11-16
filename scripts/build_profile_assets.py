@@ -45,9 +45,11 @@ SOURCES = {
     "pandas.svg": "https://cdn.jsdelivr.net/gh/pandas-dev/pandas@6172bbfd3d1706309d1854ad0ea8bab927ceca96/web/pandas/static/img/pandas_mark.svg",
     "mcp.svg": "https://cdn.jsdelivr.net/gh/modelcontextprotocol/modelcontextprotocol@de3550c9fea3c5269e42ac95204eef44a2b2cb92/docs/logo/dark.svg",
     "obsidian.svg": "https://cdn.jsdelivr.net/gh/obsidianmd/obsidian-developer-docs@1c26772ac13d6e9870c865936d389fdfe694e742/en/Assets/logo.svg",
+    "pytest.svg": "https://cdn.jsdelivr.net/gh/pytest-dev/design@7d3f9708bf9ad727d67bcf303d70587f009a1e58/pytest_logo/pytest_logo_curves.svg",
+    "vitest.svg": "https://cdn.jsdelivr.net/gh/vitest-dev/vitest@efba8cbfe94b1402a7ccab8a73994cb389cffa4d/docs/public/logo-without-border.svg",
 }
 # Logos com o nome escrito ao lado (lockup): o recorte mostra só o símbolo, sem alterar o desenho.
-LOGO_VIEWBOX = {"mcp.svg": "0 0 195 195"}
+LOGO_VIEWBOX = {"mcp.svg": "0 0 195 195", "pytest.svg": "437 153 600 600"}
 TONES = {"blue": ("#67d7ff", "#193346"),
          "purple": ("#c4b5fd", "#302943"),
          "green": ("#5eead4", "#193b39")}
@@ -135,7 +137,7 @@ def technology(name, label, filename, background, foreground="#ffffff"):
     root = svg(width, height, label)
     add(root, "rect", width=width, height=height, fill=background)
     add(root, "rect", x=3, y=3, width=22, height=22,
-        fill="#ffffff" if name in ("codex", "n8n", "bash", "github-actions", "sqlite", "pandas") else "#17202d")
+        fill="#ffffff" if name in ("codex", "n8n", "bash", "github-actions", "sqlite", "pandas", "pytest") else "#17202d")
     source = ASSETS / "brands" / filename
     if source.suffix == ".svg":
         logo = ET.parse(source).getroot()
@@ -191,7 +193,7 @@ def download(only=None):
         target.write_bytes(data)
     (ASSETS / "sources.json").write_text(json.dumps({
         "brands": SOURCES, "lucide": LUCIDE,
-        "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21; the commit-pinned set (bash to obsidian) on 2026-11-16."
+        "note": "Technology logos are from vendor repositories. AI icons are Lobe Icons reproductions, not official vendor kits. Badges and headings are custom compositions, not official lockups. Logos remain trademarks of their owners. Sources were retrieved on 2026-10-21; the commit-pinned set (bash to vitest) on 2026-11-16."
     }, indent=2) + "\n", encoding="utf-8")
 
 
@@ -238,6 +240,8 @@ def build():
         ("pandas", "pandas", "pandas.svg", "#150458"),
         ("mcp", "MCP", "mcp.svg", "#17202d", "#f1f5f9"),
         ("obsidian", "Obsidian", "obsidian.svg", "#4a37a0"),
+        ("pytest", "pytest", "pytest.svg", "#009fe3"),
+        ("vitest", "Vitest", "vitest.svg", "#17202d", "#f1f5f9"),
         ("claude-code", "Claude Code", "claudecode.png", "#d97757", "#141413"),
         ("codex", "Codex", "codex.png", "#ffffff", "#000000"),
         ("antigravity", "Antigravity/Gemini", "antigravity.png", "#17202d", "#f1f5f9")):

@@ -58,9 +58,11 @@
   <img src="./assets/badges/sqlite.svg" height="28" alt="SQLite">
   <img src="./assets/badges/bigquery.svg" height="28" alt="Google BigQuery">
   <img src="./assets/badges/pandas.svg" height="28" alt="pandas">
+  <img src="./assets/badges/pytest.svg" height="28" alt="pytest">
+  <img src="./assets/badges/vitest.svg" height="28" alt="Vitest">
 </p>
 
-`Express` · `EJS` · `pytest` · `unittest` · `node:test` · `Vitest` · `Azion SQL` · `JSON` · `CSV`
+`Express` · `EJS` · `unittest` · `node:test` · `Azion SQL` · `JSON` · `CSV`
 
 Inteligência artificial
 

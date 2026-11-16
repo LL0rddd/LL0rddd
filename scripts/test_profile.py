@@ -102,14 +102,14 @@ class ProfileTests(unittest.TestCase):
     def test_stack_logos_replace_text_and_sources_are_pinned(self):
         readme = (ROOT / "README.md").read_text()
         for name in ("bash", "terraform", "github-actions", "git", "postman", "sqlite", "bigquery", "pandas",
-                     "mcp", "obsidian"):
+                     "mcp", "obsidian", "pytest", "vitest"):
             self.assertIn('./assets/badges/' + name + '.svg"', readme)
             source = next(k for k in profile_assets.SOURCES if k.split(".")[0] == name)
             self.assertRegex(profile_assets.SOURCES[source], r"@[0-9a-f]{40}/", source)
             self.assertTrue((ROOT / "assets/brands" / source).is_file(), source)
         chips = set(re.findall(r"`([^`]+)`", readme.split("## Stack em uso", 1)[1].split("## Projetos", 1)[0]))
         for text in ("Shell", "Terraform", "GitHub Actions", "Postman", "SQLite", "Google BigQuery", "pandas",
-                     "Git", "MCP", "Obsidian"):
+                     "Git", "MCP", "Obsidian", "pytest", "Vitest"):
             self.assertNotIn(text, chips)
 
     def test_svg_assets_are_local_and_inert(self):
