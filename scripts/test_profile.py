@@ -246,6 +246,13 @@ class ProfileTests(unittest.TestCase):
         self.assertNotIn("Posicionamento profissional a definir", readme)
         self.assertIn("<strong>edge e segurança</strong>", readme)
         self.assertIn("<strong>ferramentas com IA</strong>", readme)
+        # Selos e blocos "O que eu construo" seguem o mesmo posicionamento, nesta ordem.
+        selos = [readme.index('./assets/badges/' + name + '.svg"') for name in
+                 ("edge-security", "ai-tools", "automation", "build-edge-security", "build-ai-tools",
+                  "build-automation-evidence")]
+        self.assertEqual(selos, sorted(selos))
+        for antigo in ("quality.svg", "integrations.svg", "build-security.svg", "build-automation.svg"):
+            self.assertNotIn('./assets/badges/' + antigo + '"', readme)
         self.assertNotIn("Sicredi", readme)
         self.assertNotIn("File Insight", readme)
 

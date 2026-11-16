@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
+  <img src="./assets/badges/edge-security.svg" height="32" alt="Edge e segurança">
+  <img src="./assets/badges/ai-tools.svg" height="32" alt="Ferramentas de IA">
   <img src="./assets/badges/automation.svg" height="32" alt="Automação">
-  <img src="./assets/badges/quality.svg" height="32" alt="Qualidade de software">
-  <img src="./assets/badges/integrations.svg" height="32" alt="Integrações de APIs">
 </p>
 
 <p align="center">
@@ -29,23 +29,17 @@
 
 <table>
   <tr>
-    <td width="50%" valign="top">
-      <h3><img src="./assets/badges/build-automation.svg" height="36" alt="Automação"></h3>
-      <p>Workflows com n8n, integrações entre serviços e ferramentas para reduzir trabalho operacional repetitivo.</p>
+    <td width="33%" valign="top">
+      <h3><img src="./assets/badges/build-edge-security.svg" height="36" alt="Edge e segurança"></h3>
+      <p>CDN, cache, DNS, WAF e bot protection para clientes estratégicos. Causa raiz a partir de logs, indicadores e evidências, com mitigação rápida em incidente crítico.</p>
     </td>
-    <td width="50%" valign="top">
-      <h3><img src="./assets/badges/build-quality.svg" height="36" alt="Qualidade"></h3>
-      <p>Testes unitários, de integração e E2E, com atenção a cenários negativos, bordas e comportamento observável.</p>
+    <td width="33%" valign="top">
+      <h3><img src="./assets/badges/build-ai-tools.svg" height="36" alt="Ferramentas com IA"></h3>
+      <p>Claude Code, Codex e Gemini conectados por MCP, com modelos fixados e revisão cruzada, analisando tickets, HAR, NetLog, MTR e access logs. A decisão crítica continua testável e auditável.</p>
     </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h3><img src="./assets/badges/build-integrations.svg" height="36" alt="Integrações"></h3>
-      <p>APIs, webhooks e conectores para Jira, Freshdesk, Slack, ServiceNow, Azion e ferramentas baseadas em MCP.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3><img src="./assets/badges/build-security.svg" height="36" alt="Segurança operacional"></h3>
-      <p>Redação de dados sensíveis, rollback, validação de integridade e decisões críticas verificáveis.</p>
+    <td width="33%" valign="top">
+      <h3><img src="./assets/badges/build-automation-evidence.svg" height="36" alt="Automação com evidência"></h3>
+      <p>Python, Node.js, n8n e Terraform com Jira, Freshdesk, Slack, ServiceNow e APIs da Azion. Testes nos fluxos negativos e de borda, rollback, SHA-256 e dado sensível mascarado.</p>
     </td>
   </tr>
 </table>
@@ -63,7 +57,7 @@
   <img src="./assets/badges/playwright.svg" height="28" alt="Playwright">
 </p>
 
-`Express` · `EJS` · `pytest` · `unittest` · `node:test` · `Vitest` · `SQLite` · `pandas` · `Git` · `JSON` · `CSV`
+`Shell` · `Express` · `EJS` · `Terraform` · `GitHub Actions` · `pytest` · `unittest` · `node:test` · `Vitest` · `Postman` · `SQLite` · `Google BigQuery` · `Azion SQL` · `pandas` · `Git` · `JSON` · `CSV`
 
 Inteligência artificial
 
@@ -72,6 +66,8 @@ Inteligência artificial
   <img src="./assets/badges/codex.svg" height="28" alt="Codex">
   <img src="./assets/versioned/antigravity-913a9b84400b.svg" height="28" alt="Antigravity/Gemini">
 </p>
+
+`Claude API` · `OpenAI API` · `Amazon Bedrock` · `MCP` · `RAG` · `tool use` · `Grafos de conhecimento` · `Obsidian`
 
 ## Projetos selecionados
 

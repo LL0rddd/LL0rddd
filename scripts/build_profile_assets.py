@@ -169,16 +169,17 @@ def download():
 
 
 def build():
+    # Posicionamento de 16/11/2026: edge e segurança + ferramentas com IA. Selo com texto novo ganha nome de arquivo
+    # novo, para o cache de imagens do GitHub não servir a versão anterior.
     for name, label, glyph, tone in (
-        ("automation", "AUTOMAÇÃO", "settings", "blue"),
-        ("quality", "QUALIDADE", "flask-conical", "purple"),
-        ("integrations", "INTEGRAÇÕES", "plug", "green")):
+        ("edge-security", "EDGE & SECURITY", "shield-check", "green"),
+        ("ai-tools", "FERRAMENTAS DE IA", "bot", "purple"),
+        ("automation", "AUTOMAÇÃO", "settings", "blue")):
         badge(name, label, glyph, tone)
     for name, label, glyph, tone in (
-        ("build-automation", "Automação", "settings", "blue"),
-        ("build-quality", "Qualidade", "flask-conical", "purple"),
-        ("build-integrations", "Integrações", "plug", "green"),
-        ("build-security", "Segurança operacional", "shield-check", "green"),
+        ("build-edge-security", "Edge e segurança", "shield-check", "green"),
+        ("build-ai-tools", "Ferramentas com IA", "bot", "purple"),
+        ("build-automation-evidence", "Automação com evidência", "settings", "blue"),
         ("prompt-forge", "Prompt Forge", "puzzle", "purple"),
         ("requests-automations", "Requests Automations", "settings", "blue"),
         ("jira-issue-analyzer", "Jira Issue Analyzer", "link", "green"),
