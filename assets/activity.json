@@ -1,7 +1,7 @@
 {
   "owner": "LL0rddd",
   "scope": "personal_public_and_private",
-  "as_of": "2026-11-20",
+  "as_of": "2026-11-21",
   "months": [
     {
       "month": "2026-06",
@@ -35,8 +35,8 @@
     },
     {
       "month": "2026-11",
-      "commits": 1351,
-      "pull_requests": 112,
+      "commits": 1360,
+      "pull_requests": 113,
       "repositories": 45
     }
   ],
