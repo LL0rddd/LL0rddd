@@ -20,8 +20,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/versioned/activity-2bfe77528bf0.svg">
-    <img src="./assets/versioned/activity-4cc82b7a4111.gif" width="580" alt="Atividade agregada em código: commits e PRs de minha autoria em repositórios públicos e privados, incluindo colaborações; repositórios próprios sem forks. Atualização automática horária dos últimos seis meses, incluindo o atual parcial. Sem nomes ou conteúdo privado; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
+    <source media="(prefers-reduced-motion: reduce)" srcset="./assets/versioned/activity-837e71889ad2.svg">
+    <img src="./assets/versioned/activity-6b2b2cbf891f.gif" width="580" alt="Atividade agregada em código: commits e PRs de minha autoria em repositórios públicos e privados, incluindo colaborações; repositórios próprios sem forks. Atualização automática horária dos últimos seis meses, incluindo o atual parcial. Sem nomes ou conteúdo privado; escalas independentes. Veja a metodologia em docs/IDENTIDADE-VISUAL.md.">
   </picture>
 </p>
 
